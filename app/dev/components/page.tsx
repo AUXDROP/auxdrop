@@ -44,7 +44,7 @@ export default function ComponentLibraryPage() {
   return (
     <div className="mx-auto max-w-[1440px] border-x border-border px-8 py-16">
       <h1 className="mb-2 font-display text-3xl font-extrabold text-on-dark">
-        Auxdrop Component Library
+        AUXDROP Component Library
       </h1>
       <p className="mb-12 max-w-2xl font-sans text-sm text-muted">
         Internal dev reference — design tokens and shared components from{" "}

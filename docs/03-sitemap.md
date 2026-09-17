@@ -39,7 +39,7 @@ then commerce, then admin/ops, then enterprise/live.
 | Following.dc.html | `/following` | The current user's followed beatmakers feed. |
 | Activity Feed.dc.html | `/activity` (inferred) | Social/activity stream (battle results, new releases, follows). |
 | Comments.dc.html | (embedded component, not a standalone route) | Comment thread component used on battle/beat/release pages. |
-| Dashboard.dc.html | `/dashboard` | Logged-in beatmaker home — "Welcome to Auxdrop, Jordan." Active battles, stats, quick actions. |
+| Dashboard.dc.html | `/dashboard` | Logged-in beatmaker home — "Welcome to AUXDROP, Jordan." Active battles, stats, quick actions. |
 | Notifications.dc.html | `/notifications` | Notification center. |
 | Messages.dc.html | `/messages` | Direct messages between users. |
 | Releases.dc.html | `/releases` | Season compilation albums — the Phase-1 commercial output. |

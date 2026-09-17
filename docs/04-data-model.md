@@ -72,7 +72,7 @@ Outcome of a battle for a participant (`outcomes`, `resultsStates` data loops;
 A commercial output — season compilation album (`releases` data loop;
 `Releases.dc.html`, `Release Management.dc.html`).
 
-- id, title (e.g. "Auxdrop Vol. X"), season, tracklist (Track IDs)
+- id, title (e.g. "AUXDROP Vol. X"), season, tracklist (Track IDs)
 - DSP distribution status/links (Spotify/Apple Music/Tidal)
 - royalty_split config (references RoyaltySplit)
 

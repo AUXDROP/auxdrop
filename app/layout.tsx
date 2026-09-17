@@ -15,7 +15,7 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Auxdrop",
+  title: "AUXDROP",
   description:
     "AUXDROP — the competitive music-production battle network.",
 };
