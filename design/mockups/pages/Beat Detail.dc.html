@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<![CDATA[
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#050506;font-family:'Manrope',sans-serif;} a{color:#FF3B30;text-decoration:none;} a:hover{color:#ff5c53;}</style>
+</helmet>
+<div style="min-height:100vh; background:#050506;">
+  <div style="max-width:1440px; margin:0 auto; background:#09090B; border-left:1px solid #27272A; border-right:1px solid #27272A;">
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:22px 64px; border-bottom:1px solid #27272A;">
+      <a href="Home.dc.html" style="display:flex; align-items:center; gap:10px;"><img src="../uploads/ChatGPT Image Sep 15, 2026, 05_05_17 PM.png" style="width:26px; height:26px; object-fit:contain; filter:invert(1);" /><span style="font-family:'Syne'; font-weight:800; font-size:18px; color:#F7F7F5;">Auxdrop</span></a>
+      <a href="Shop.dc.html" style="font-family:'Manrope'; font-weight:600; font-size:14px; color:#A1A1AA;">Shop</a>
+      <a href="Cart.dc.html" style="font-family:'Manrope'; font-weight:700; font-size:13px; color:#F7F7F5; background:#FF3B30; border-radius:8px; padding:11px 20px;">Cart (0)</a>
+    </div>
+    <div style="padding:64px; display:grid; grid-template-columns:420px 1fr; gap:56px;">
+      <div style="width:100%; aspect-ratio:1; border-radius:14px; background:repeating-linear-gradient(45deg,#18181B,#18181B 10px,#141416 10px,#141416 20px);"></div>
+      <div style="display:flex; flex-direction:column; gap:28px;">
+        <div>
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;"><span style="font-family:'Manrope'; font-weight:700; font-size:11px; letter-spacing:0.08em; color:#F59E0B; background:rgba(245,158,11,0.12); border-radius:100px; padding:5px 10px;">EXAMPLE ITEM</span></div>
+          <h1 style="margin:0 0 8px; font-family:'Syne'; font-weight:800; font-size:36px; color:#F7F7F5;">Low Light</h1>
+          <div style="font-family:'Manrope'; font-size:14px; color:#A1A1AA;">by Example Beatmaker · Trap · 140 BPM</div>
+          <div style="display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;" data-component="commercial-badges">
+            <span style="font-family:'Manrope'; font-weight:700; font-size:11px; color:#22C55E; background:rgba(34,197,94,0.12); border-radius:100px; padding:5px 10px;">LICENSE AVAILABLE: NON-EXCLUSIVE</span>
+            <span style="font-family:'Manrope'; font-weight:700; font-size:11px; color:#22C55E; background:rgba(34,197,94,0.12); border-radius:100px; padding:5px 10px;">LICENSE AVAILABLE: EXCLUSIVE</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:2px; height:36px; background:#18181B; border:1px solid #27272A; border-radius:10px; padding:0 16px;" data-component="waveform">
+          <sc-for list="{{ waveform }}" as="w" hint-placeholder-count="40">
+            <div style="flex:1; height:{{ w.h }}%; background:{{ w.color }}; border-radius:2px;"></div>
+          </sc-for>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:1px; background:#27272A; border-radius:10px; overflow:hidden;">
+          <sc-for list="{{ licenses }}" as="lo" hint-placeholder-count="3">
+            <div data-component="license-option" style="background:#18181B; padding:18px 20px; display:flex; align-items:center; justify-content:space-between;">
+              <div><div style="font-family:'Manrope'; font-weight:700; font-size:14px; color:#F7F7F5;">{{ lo.name }}</div></div>
+              <span style="font-family:'Syne'; font-weight:800; font-size:20px; color:#F7F7F5;">{{ lo.price }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <a href="Cart.dc.html" data-action="add-to-cart" style="text-align:center; font-family:'Manrope'; font-weight:700; font-size:15px; color:#F7F7F5; background:#FF3B30; border-radius:8px; padding:16px;">Add to cart</a>
+      </div>
+    </div>
+    <div data-component="audio-player-bar" style="position:sticky; bottom:0; display:flex; align-items:center; gap:16px; padding:14px 64px; background:#09090B; border-top:1px solid #27272A;">
+      <button data-action="toggle-play" style="width:36px; height:36px; border-radius:50%; background:#FF3B30; border:none; color:#F7F7F5; font-weight:700; flex-shrink:0; cursor:pointer;">▶</button>
+      <span style="font-family:'Manrope'; font-weight:600; font-size:13px; color:#F7F7F5; flex-shrink:0;">Low Light</span>
+      <div style="flex:1; display:flex; align-items:center; gap:2px; height:24px;" data-component="waveform-mini">
+        <sc-for list="{{ waveform }}" as="w" hint-placeholder-count="40">
+          <div style="flex:1; height:{{ w.h }}%; background:{{ w.color }}; border-radius:2px;"></div>
+        </sc-for>
+      </div>
+      <span data-field="track-time" style="font-family:'Manrope'; font-size:12px; color:#71717A; flex-shrink:0;">1:12 / 2:48</span>
+    </div>
+    <div style="padding:28px 64px; border-top:1px solid #27272A; font-family:'Manrope'; font-size:12px; color:#71717A;">© 2026 Auxdrop</div>
+  </div>
+
+  <!-- MOBILE -->
+  <div style="max-width:375px; margin:64px auto; border:1px solid #27272A; border-radius:20px; overflow:hidden; background:#09090B;">
+    <div style="font-family:'Manrope'; font-weight:700; font-size:10px; letter-spacing:0.1em; color:#71717A; text-align:center; padding:8px; background:#050506;">MOBILE — /shop/low-light</div>
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #27272A;">
+      <div style="display:flex; align-items:center; gap:8px;"><img src="../uploads/ChatGPT Image Sep 15, 2026, 05_05_17 PM.png" style="width:20px; height:20px; object-fit:contain; filter:invert(1);" /><span style="font-family:'Syne'; font-weight:800; font-size:14px; color:#F7F7F5;">Auxdrop</span></div>
+      <div style="width:22px; height:16px; display:flex; flex-direction:column; justify-content:space-between;"><span style="height:2px; background:#F7F7F5;"></span><span style="height:2px; background:#F7F7F5;"></span><span style="height:2px; background:#F7F7F5;"></span></div>
+    </div>
+    <div style="padding:28px 20px; display:flex; flex-direction:column; gap:14px;">
+      <h1 style="margin:0; font-family:'Syne'; font-weight:800; font-size:22px; color:#F7F7F5;">Beat Detail</h1>
+      <div style="font-family:'Manrope'; font-size:13px; color:#A1A1AA; line-height:1.5;">Content reflows to a single column on mobile, following the same components, type, and color system as desktop.</div>
+    </div>
+  </div>
+</div>
+]]>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+<![CDATA[
+class Component extends DCLogic {
+  renderVals() {
+    const waveform = Array.from({length:40}, (_,i) => ({ h: 20 + Math.abs(Math.sin(i*0.7))*70, color: i < 14 ? '#FF3B30' : '#27272A' }));
+    return {
+      waveform,
+      licenses: [
+        { name: 'Non-Exclusive License', price: '$40' },
+        { name: 'Unlimited License', price: '$120' },
+        { name: 'Exclusive License', price: '$600' },
+      ],
+    };
+  }
+}
+]]>
+</script>
+</body>
+</html>

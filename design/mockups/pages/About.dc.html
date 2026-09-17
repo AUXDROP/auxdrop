@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<![CDATA[
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #050506; font-family: 'Manrope', sans-serif; }
+  a { color: #FF3B30; text-decoration: none; }
+  a:hover { color: #ff5c53; }
+</style>
+</helmet>
+
+<div style="min-height:100vh; background:#050506;">
+  <!-- DESKTOP -->
+  <div style="display:flex; flex-direction:column; max-width:1440px; margin:0 auto; background:#09090B; border-left:1px solid #27272A; border-right:1px solid #27272A;">
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:22px 64px; border-bottom:1px solid #27272A;">
+      <a href="Home.dc.html" style="display:flex; align-items:center; gap:10px;">
+        <img src="../uploads/ChatGPT Image Sep 15, 2026, 05_05_17 PM.png" style="width:26px; height:26px; object-fit:contain; filter:invert(1);" />
+        <span style="font-family:'Syne'; font-weight:800; font-size:18px; color:#F7F7F5;">Auxdrop</span>
+      </a>
+      <div style="display:flex; gap:28px;">
+        <a href="About.dc.html" style="font-family:'Manrope'; font-weight:600; font-size:14px; color:#F7F7F5;">About</a>
+        <a href="How It Works.dc.html" style="font-family:'Manrope'; font-weight:600; font-size:14px; color:#A1A1AA;">How It Works</a>
+        <a href="Beat Battles.dc.html" style="font-family:'Manrope'; font-weight:600; font-size:14px; color:#A1A1AA;">Beat Battles</a>
+      </div>
+      <a href="Battle Detail.dc.html" style="font-family:'Manrope'; font-weight:700; font-size:13px; color:#F7F7F5; background:#FF3B30; border-radius:8px; padding:11px 20px;">Enter a Battle</a>
+    </div>
+    <div style="padding:100px 64px; display:flex; flex-direction:column; gap:24px; border-bottom:1px solid #27272A;">
+      <div style="font-family:'Manrope'; font-weight:700; font-size:12px; letter-spacing:0.12em; color:#7C3AED;">ABOUT AUXDROP</div>
+      <h1 style="margin:0; font-family:'Syne'; font-weight:800; font-size:56px; color:#F7F7F5; max-width:760px;">The competitive home for beatmakers.</h1>
+      <p style="margin:0; font-family:'Manrope'; font-size:18px; color:#A1A1AA; max-width:640px; line-height:1.6;">Auxdrop runs timed Beat Battles that turn competitive beatmaking into real Charts standing, releases, and revenue. Every Battle is a step in a longer run — not a one-off contest.</p>
+    </div>
+    <div style="padding:64px; border-bottom:1px solid #27272A;">
+      <div style="font-family:'Manrope'; font-weight:700; font-size:12px; letter-spacing:0.1em; color:#71717A; margin-bottom:20px;">WHAT YOU CAN DO</div>
+      <div style="display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:32px;">
+        <div><div style="font-family:'Syne'; font-weight:700; font-size:20px; color:#F7F7F5; margin-bottom:10px;">Compete in Beat Battles</div><div style="font-family:'Manrope'; font-size:14px; color:#A1A1AA; line-height:1.6;">Blind judging and head-to-head Battles surface the best beats, not the loudest.</div></div>
+        <div><div style="font-family:'Syne'; font-weight:700; font-size:20px; color:#F7F7F5; margin-bottom:10px;">Sell beats and licenses</div><div style="font-family:'Manrope'; font-size:14px; color:#A1A1AA; line-height:1.6;">Winning beats can move into releases, your Shop, and license review.</div></div>
+        <div><div style="font-family:'Syne'; font-weight:700; font-size:20px; color:#F7F7F5; margin-bottom:10px;">Build your name</div><div style="font-family:'Manrope'; font-size:14px; color:#A1A1AA; line-height:1.6;">Charts, catalogs, and Hall of Fame status compound over time, not one Battle.</div></div>
+      </div>
+    </div>
+    <div style="padding:56px 64px; display:flex; align-items:center; justify-content:space-between;">
+      <div style="font-family:'Manrope'; font-size:12px; color:#71717A;">© 2026 Auxdrop. Page: /about</div>
+      <div style="display:flex; gap:20px; font-family:'Manrope'; font-size:12px; color:#71717A;"><span>Terms</span><span>Privacy</span></div>
+    </div>
+  </div>
+
+  <!-- MOBILE -->
+  <div style="max-width:375px; margin:64px auto; border:1px solid #27272A; border-radius:20px; overflow:hidden; background:#09090B;">
+    <div style="font-family:'Manrope'; font-weight:700; font-size:10px; letter-spacing:0.1em; color:#71717A; text-align:center; padding:8px; background:#050506;">MOBILE — /about</div>
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #27272A;">
+      <div style="display:flex; align-items:center; gap:8px;"><img src="../uploads/ChatGPT Image Sep 15, 2026, 05_05_17 PM.png" style="width:20px; height:20px; object-fit:contain; filter:invert(1);" /><span style="font-family:'Syne'; font-weight:800; font-size:14px; color:#F7F7F5;">Auxdrop</span></div>
+      <div style="width:22px; height:16px; display:flex; flex-direction:column; justify-content:space-between;"><span style="height:2px; background:#F7F7F5;"></span><span style="height:2px; background:#F7F7F5;"></span><span style="height:2px; background:#F7F7F5;"></span></div>
+    </div>
+    <div style="padding:32px 20px; display:flex; flex-direction:column; gap:16px; border-bottom:1px solid #27272A;">
+      <div style="font-family:'Manrope'; font-weight:700; font-size:11px; letter-spacing:0.1em; color:#7C3AED;">ABOUT AUXDROP</div>
+      <h1 style="margin:0; font-family:'Syne'; font-weight:800; font-size:28px; color:#F7F7F5;">The competitive home for beatmakers.</h1>
+      <p style="margin:0; font-family:'Manrope'; font-size:14px; color:#A1A1AA; line-height:1.6;">Auxdrop turns competitive beatmaking into real Charts standing, releases, and revenue.</p>
+    </div>
+  </div>
+</div>
+]]>
+</x-dc>
+</body>
+</html>

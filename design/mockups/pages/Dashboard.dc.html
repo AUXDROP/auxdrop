@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<![CDATA[
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#050506;font-family:'Manrope',sans-serif;} a{color:#FF3B30;text-decoration:none;} a:hover{color:#ff5c53;}</style>
+</helmet>
+<div style="min-height:100vh; background:#050506;">
+  <div style="max-width:1440px; margin:0 auto; background:#09090B; border-left:1px solid #27272A; border-right:1px solid #27272A;">
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:22px 64px; border-bottom:1px solid #27272A;">
+      <a href="Home.dc.html" style="display:flex; align-items:center; gap:10px;"><img src="../uploads/ChatGPT Image Sep 15, 2026, 05_05_17 PM.png" style="width:26px; height:26px; object-fit:contain; filter:invert(1);" /><span style="font-family:'Syne'; font-weight:800; font-size:18px; color:#F7F7F5;">Auxdrop</span></a>
+      <div style="display:flex; gap:28px;">
+        <a href="Dashboard.dc.html" style="font-family:'Manrope'; font-weight:600; font-size:14px; color:#F7F7F5;">Dashboard</a>
+        <a href="Wallet.dc.html" style="font-family:'Manrope'; font-weight:600; font-size:14px; color:#A1A1AA;">Wallet</a>
+        <a href="Analytics.dc.html" style="font-family:'Manrope'; font-weight:600; font-size:14px; color:#A1A1AA;">Analytics</a>
+        <a href="Settings.dc.html" style="font-family:'Manrope'; font-weight:600; font-size:14px; color:#A1A1AA;">Settings</a>
+      </div>
+      <a href="Notifications.dc.html" style="width:36px; height:36px; border-radius:50%; background:repeating-linear-gradient(135deg,#1f1f23,#1f1f23 5px,#18181B 5px,#18181B 10px); display:block;"></a>
+    </div>
+    <div style="padding:56px 64px 0;">
+      <div style="font-family:'Manrope'; font-size:12px; color:#71717A; margin-bottom:8px;">Page: /dashboard</div>
+      <h1 style="margin:0 0 32px; font-family:'Syne'; font-weight:800; font-size:34px; color:#F7F7F5;">Welcome to Auxdrop, Jordan</h1>
+      <div style="background:#18181B; border:1px solid #27272A; border-radius:12px; padding:32px; margin-bottom:40px; display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;">
+        <div><div style="font-family:'Syne'; font-weight:700; font-size:18px; color:#F7F7F5;">Complete your profile</div><div style="font-family:'Manrope'; font-size:13px; color:#71717A; margin-top:6px;">Add a photo, genres, and links so other Beatmakers can find you.</div></div>
+        <a href="Settings.dc.html" style="font-family:'Manrope'; font-weight:700; font-size:13px; color:#F7F7F5; background:#FF3B30; border-radius:8px; padding:12px 20px; white-space:nowrap;">Complete profile</a>
+      </div>
+    </div>
+    <div style="padding:0 64px 40px; display:grid; grid-template-columns:1.3fr 1fr; gap:40px;">
+      <div style="display:flex; flex-direction:column; gap:32px;">
+        <div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:16px;"><div style="font-family:'Manrope'; font-weight:700; font-size:12px; letter-spacing:0.1em; color:#71717A;">ACTIVE BATTLES</div><a href="Beat Battles.dc.html" style="font-family:'Manrope'; font-weight:600; font-size:13px; color:#A1A1AA;">View all →</a></div>
+          <div style="background:#18181B; border:1px solid #27272A; border-radius:12px; padding:24px;">
+            <div style="font-family:'Syne'; font-weight:700; font-size:16px; color:#F7F7F5;">Start your first Beat Battle</div>
+            <div style="font-family:'Manrope'; font-size:13px; color:#71717A; margin-top:6px;">No Battles yet. Enter one when they open.</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:'Manrope'; font-weight:700; font-size:12px; letter-spacing:0.1em; color:#71717A; margin-bottom:16px;">GET STARTED</div>
+          <div style="display:flex; flex-direction:column; gap:1px; background:#27272A; border-radius:10px; overflow:hidden;">
+            <div style="background:#18181B; padding:14px 18px;"><span style="font-family:'Manrope'; font-weight:600; font-size:13px; color:#F7F7F5;">Upload your first beat</span></div>
+            <div style="background:#18181B; padding:14px 18px;"><span style="font-family:'Manrope'; font-weight:600; font-size:13px; color:#F7F7F5;">Create your Shop</span></div>
+            <div style="background:#18181B; padding:14px 18px;"><span style="font-family:'Manrope'; font-weight:600; font-size:13px; color:#F7F7F5;">Connect your payout account</span></div>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:'Manrope'; font-weight:700; font-size:12px; letter-spacing:0.1em; color:#71717A; margin-bottom:16px;">WHAT'S NEXT</div>
+          <div style="display:flex; align-items:center; overflow-x:auto;">
+            <sc-for list="{{ journey }}" as="st" hint-placeholder-count="14">
+              <div style="display:flex; align-items:center; flex-shrink:0;">
+                <div style="display:flex; align-items:center; gap:6px; padding:8px 14px; border-radius:100px; background:{{ st.bg }}; border:1px solid {{ st.border }};"><span style="width:6px; height:6px; border-radius:50%; background:{{ st.dot }};"></span><span style="font-family:'Manrope'; font-weight:700; font-size:11px; color:{{ st.color }}; white-space:nowrap;">{{ st.name }}</span></div>
+                <span style="color:#27272A; margin:0 6px; font-size:11px;">→</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div style="background:#18181B; border:1px solid #27272A; border-radius:12px; padding:22px; display:flex; flex-direction:column; gap:6px;"><span style="font-family:'Manrope'; font-size:12px; color:#71717A;">Wallet balance</span><span style="font-family:'Syne'; font-weight:800; font-size:22px; color:#F7F7F5;">$0.00</span></div>
+        <a href="Shop.dc.html" style="background:#18181B; border:1px solid #27272A; border-radius:12px; padding:22px; display:flex; flex-direction:column; gap:6px;"><span style="font-family:'Manrope'; font-size:12px; color:#71717A;">Shop</span><span style="font-family:'Syne'; font-weight:700; font-size:15px; color:#F7F7F5;">Create your Shop</span></a>
+        <a href="Licenses.dc.html" style="background:#18181B; border:1px solid #27272A; border-radius:12px; padding:22px; display:flex; flex-direction:column; gap:6px;"><span style="font-family:'Manrope'; font-size:12px; color:#71717A;">Licenses</span><span style="font-family:'Syne'; font-weight:700; font-size:15px; color:#F7F7F5;">No licenses yet</span></a>
+        <a href="Analytics.dc.html" style="background:#18181B; border:1px solid #27272A; border-radius:12px; padding:22px; display:flex; flex-direction:column; gap:6px;"><span style="font-family:'Manrope'; font-size:12px; color:#71717A;">Analytics</span><span style="font-family:'Syne'; font-weight:700; font-size:15px; color:#F7F7F5;">Not tracked yet</span></a>
+      </div>
+    </div>
+    <div style="padding:28px 64px; border-top:1px solid #27272A; font-family:'Manrope'; font-size:12px; color:#71717A;">© 2026 Auxdrop</div>
+  </div>
+
+  <!-- MOBILE -->
+  <div style="max-width:375px; margin:64px auto; border:1px solid #27272A; border-radius:20px; overflow:hidden; background:#09090B;">
+    <div style="font-family:'Manrope'; font-weight:700; font-size:10px; letter-spacing:0.1em; color:#71717A; text-align:center; padding:8px; background:#050506;">MOBILE — /dashboard</div>
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #27272A;">
+      <div style="display:flex; align-items:center; gap:8px;"><img src="../uploads/ChatGPT Image Sep 15, 2026, 05_05_17 PM.png" style="width:20px; height:20px; object-fit:contain; filter:invert(1);" /><span style="font-family:'Syne'; font-weight:800; font-size:14px; color:#F7F7F5;">Auxdrop</span></div>
+      <div style="width:22px; height:16px; display:flex; flex-direction:column; justify-content:space-between;"><span style="height:2px; background:#F7F7F5;"></span><span style="height:2px; background:#F7F7F5;"></span><span style="height:2px; background:#F7F7F5;"></span></div>
+    </div>
+    <div style="padding:24px 20px; display:flex; flex-direction:column; gap:16px;">
+      <h1 style="margin:0; font-family:'Syne'; font-weight:800; font-size:22px; color:#F7F7F5;">Welcome, Jordan</h1>
+      <div style="background:#18181B; border:1px solid #27272A; border-radius:10px; padding:16px;"><div style="font-family:'Syne'; font-weight:700; font-size:14px; color:#F7F7F5;">Upload your first beat</div><div style="font-family:'Manrope'; font-size:12px; color:#71717A; margin-top:4px;">Get your Shop started.</div></div>
+    </div>
+  </div>
+</div>
+]]>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+<![CDATA[
+class Component extends DCLogic {
+  renderVals() {
+    const stages = ['Enter a Battle','Upload your beat','Get judged','See results','Sell in your Shop','Sell licenses','Release music','Get paid'];
+    const journey = stages.map((name,i) => i === 0 ? {name,color:'#F7F7F5',bg:'rgba(255,59,48,0.14)',border:'#FF3B30',dot:'#FF3B30'} : {name,color:'#71717A',bg:'transparent',border:'#27272A',dot:'#27272A'});
+    return { journey };
+  }
+}
+]]>
+</script>
+</body>
+</html>

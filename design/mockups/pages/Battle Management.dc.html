@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<![CDATA[
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#050506;font-family:'Manrope',sans-serif;} a{color:#FF3B30;text-decoration:none;} a:hover{color:#ff5c53;}</style>
+</helmet>
+<div style="min-height:100vh; background:#050506; display:flex;">
+  <div style="width:220px; background:#09090B; border-right:1px solid #27272A; padding:24px 16px; display:flex; flex-direction:column; gap:4px; flex-shrink:0;">
+    <div style="display:flex; align-items:center; gap:8px; padding:0 8px 20px;"><img src="../uploads/ChatGPT Image Sep 15, 2026, 05_05_17 PM.png" style="width:20px; height:20px; object-fit:contain; filter:invert(1);" /><span style="font-family:'Syne'; font-weight:800; font-size:14px; color:#F7F7F5;">Auxdrop Admin</span></div>
+    <sc-for list="{{ nav }}" as="n" hint-placeholder-count="10">
+      <a href="{{ n.href }}" style="padding:10px 12px; border-radius:8px; font-family:'Manrope'; font-weight:600; font-size:13px; color:{{ n.color }}; background:{{ n.bg }};">{{ n.name }}</a>
+    </sc-for>
+  </div>
+  <div style="flex:1; max-width:1220px;">
+    <div style="padding:24px 48px; border-bottom:1px solid #27272A; font-family:'Manrope'; font-size:12px; color:#71717A;">Page: /admin/battles</div>
+    <div style="padding:48px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:32px;"><h1 style="margin:0; font-family:'Syne'; font-weight:800; font-size:30px; color:#F7F7F5;">Battle Management</h1><button style="font-family:'Manrope'; font-weight:700; font-size:13px; color:#F7F7F5; background:#FF3B30; border:none; border-radius:8px; padding:10px 18px; cursor:pointer;">Create Battle</button></div>
+      <div style="border:1px solid #27272A; border-radius:12px; overflow-x:auto;">
+        <div style="display:grid; grid-template-columns:80px 1fr 120px 120px 100px; gap:16px; padding:14px 20px; background:#18181B; font-family:'Manrope'; font-weight:700; font-size:11px; letter-spacing:0.08em; color:#71717A; min-width:600px;"><div>ID</div><div>NAME</div><div>STATUS</div><div>ENTRIES</div><div>ACTIONS</div></div>
+        <sc-for list="{{ battles }}" as="b" hint-placeholder-count="5">
+          <div style="display:grid; grid-template-columns:80px 1fr 120px 120px 100px; gap:16px; padding:16px 20px; border-top:1px solid #27272A; align-items:center; min-width:600px;">
+            <div style="font-family:'Syne'; font-weight:700; font-size:13px; color:#F7F7F5;">{{ b.id }}</div>
+            <div style="font-family:'Manrope'; font-weight:600; font-size:13px; color:#F7F7F5;">Battle {{ b.id }}</div>
+            <div style="font-family:'Manrope'; font-weight:700; font-size:11px; color:{{ b.color }};">{{ b.status }}</div>
+            <div style="font-family:'Manrope'; font-size:13px; color:#A1A1AA;">{{ b.entries }}</div>
+            <div style="font-family:'Manrope'; font-size:12px; color:#71717A;">Edit</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOBILE -->
+  <div style="max-width:375px; margin:64px auto; border:1px solid #27272A; border-radius:20px; overflow:hidden; background:#09090B;">
+    <div style="font-family:'Manrope'; font-weight:700; font-size:10px; letter-spacing:0.1em; color:#71717A; text-align:center; padding:8px; background:#050506;">MOBILE — /admin/battles</div>
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #27272A;">
+      <div style="display:flex; align-items:center; gap:8px;"><img src="../uploads/ChatGPT Image Sep 15, 2026, 05_05_17 PM.png" style="width:20px; height:20px; object-fit:contain; filter:invert(1);" /><span style="font-family:'Syne'; font-weight:800; font-size:14px; color:#F7F7F5;">Auxdrop</span></div>
+      <div style="width:22px; height:16px; display:flex; flex-direction:column; justify-content:space-between;"><span style="height:2px; background:#F7F7F5;"></span><span style="height:2px; background:#F7F7F5;"></span><span style="height:2px; background:#F7F7F5;"></span></div>
+    </div>
+    <div style="padding:28px 20px; display:flex; flex-direction:column; gap:14px;">
+      <h1 style="margin:0; font-family:'Syne'; font-weight:800; font-size:22px; color:#F7F7F5;">Battle Management</h1>
+      <div style="font-family:'Manrope'; font-size:13px; color:#A1A1AA; line-height:1.5;">Content reflows to a single column on mobile, following the same components, type, and color system as desktop.</div>
+    </div>
+  </div>
+</div>
+]]>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+<![CDATA[
+class Component extends DCLogic {
+  renderVals() {
+    const navItems = ['Admin Dashboard','Battle Management','User Management','Submission Review','Shop Moderation','Release Management','Royalty Management','CMS','Financial Reporting','Dispute Resolution'];
+    const nav = navItems.map((name,i) => ({ name, href: name+'.dc.html', color: i===1?'#F7F7F5':'#A1A1AA', bg: i===1?'#18181B':'transparent' }));
+    return {
+      nav,
+      battles: [
+        {id:'014',status:'OPEN',color:'#22C55E',entries:128},{id:'015',status:'UPCOMING',color:'#3B82F6',entries:0},
+        {id:'013',status:'COMPLETED',color:'#71717A',entries:96},{id:'012',status:'COMPLETED',color:'#71717A',entries:104},
+        {id:'016',status:'DRAFT',color:'#F59E0B',entries:0},
+      ],
+    };
+  }
+}
+]]>
+</script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<![CDATA[
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#050506;font-family:'Manrope',sans-serif;} a{color:#FF3B30;text-decoration:none;} a:hover{color:#ff5c53;}</style>
+</helmet>
+<div style="min-height:100vh; background:#050506;">
+  <div style="max-width:1440px; margin:0 auto; background:#09090B; border-left:1px solid #27272A; border-right:1px solid #27272A;">
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:22px 64px; border-bottom:1px solid #27272A;">
+      <a href="Home.dc.html" style="display:flex; align-items:center; gap:10px;"><img src="../uploads/ChatGPT Image Sep 15, 2026, 05_05_17 PM.png" style="width:26px; height:26px; object-fit:contain; filter:invert(1);" /><span style="font-family:'Syne'; font-weight:800; font-size:18px; color:#F7F7F5;">Auxdrop</span></a>
+      <a href="Dashboard.dc.html" style="font-family:'Manrope'; font-weight:600; font-size:14px; color:#A1A1AA;">Dashboard</a>
+    </div>
+    <div style="padding:56px 64px;">
+      <div style="font-family:'Manrope'; font-size:12px; color:#71717A; margin-bottom:8px;">Page: /notifications</div>
+      <h1 style="margin:0 0 32px; font-family:'Syne'; font-weight:800; font-size:30px; color:#F7F7F5;">Notifications</h1>
+      <div style="display:flex; flex-direction:column; gap:1px; background:#27272A; border-radius:10px; overflow:hidden;">
+        <sc-for list="{{ notifications }}" as="n" hint-placeholder-count="8">
+          <div style="background:#18181B; padding:16px 20px; display:flex; align-items:center; justify-content:space-between;">
+            <div style="display:flex; align-items:center; gap:14px;"><span style="width:6px; height:6px; border-radius:50%; background:#FF3B30;"></span><span style="font-family:'Manrope'; font-weight:600; font-size:14px; color:#F7F7F5;">{{ n.text }}</span></div>
+            <span style="font-family:'Manrope'; font-size:12px; color:#71717A;">{{ n.time }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="padding:28px 64px; border-top:1px solid #27272A; font-family:'Manrope'; font-size:12px; color:#71717A;">© 2026 Auxdrop</div>
+  </div>
+
+  <!-- MOBILE -->
+  <div style="max-width:375px; margin:64px auto; border:1px solid #27272A; border-radius:20px; overflow:hidden; background:#09090B;">
+    <div style="font-family:'Manrope'; font-weight:700; font-size:10px; letter-spacing:0.1em; color:#71717A; text-align:center; padding:8px; background:#050506;">MOBILE — /notifications</div>
+    <div style="padding:16px 20px; display:flex; flex-direction:column; gap:1px; background:#27272A;">
+      <sc-for list="{{ notifications }}" as="n" hint-placeholder-count="6">
+        <div style="background:#09090B; padding:14px 16px;"><span style="font-family:'Manrope'; font-weight:600; font-size:13px; color:#F7F7F5;">{{ n.text }}</span></div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+]]>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+<![CDATA[
+class Component extends DCLogic {
+  renderVals() {
+    return { notifications: [
+      {text:'Auxdrop Battle 016 is now open for entry',time:'2h ago'},
+      {text:'Deadline approaching — Battle 014 closes in 1 hour',time:'3h ago'},
+      {text:'Your submission to Battle 014 was received',time:'5h ago'},
+      {text:'Judging complete for Battle 013',time:'1d ago'},
+      {text:'Your ranking moved to #27',time:'1d ago'},
+      {text:'Concrete Bloom shortlisted for licensing review',time:'2d ago'},
+      {text:'Sidewinder selected for the Season 03 release',time:'4d ago'},
+      {text:'You have a new follower',time:'5d ago'},
+    ]};
+  }
+}
+]]>
+</script>
+</body>
+</html>

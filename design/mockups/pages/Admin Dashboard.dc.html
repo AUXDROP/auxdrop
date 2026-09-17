@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<![CDATA[
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#050506;font-family:'Manrope',sans-serif;} a{color:#FF3B30;text-decoration:none;} a:hover{color:#ff5c53;}</style>
+</helmet>
+<div style="min-height:100vh; background:#050506; display:flex;">
+  <div style="width:220px; background:#09090B; border-right:1px solid #27272A; padding:24px 16px; display:flex; flex-direction:column; gap:4px; flex-shrink:0;">
+    <div style="display:flex; align-items:center; gap:8px; padding:0 8px 20px;"><img src="../uploads/ChatGPT Image Sep 15, 2026, 05_05_17 PM.png" style="width:20px; height:20px; object-fit:contain; filter:invert(1);" /><span style="font-family:'Syne'; font-weight:800; font-size:14px; color:#F7F7F5;">Auxdrop Admin</span></div>
+    <sc-for list="{{ nav }}" as="n" hint-placeholder-count="10">
+      <a href="{{ n.href }}" style="padding:10px 12px; border-radius:8px; font-family:'Manrope'; font-weight:600; font-size:13px; color:{{ n.color }}; background:{{ n.bg }};">{{ n.name }}</a>
+    </sc-for>
+  </div>
+  <div style="flex:1; max-width:1220px;">
+    <div style="padding:24px 48px; border-bottom:1px solid #27272A; font-family:'Manrope'; font-size:12px; color:#71717A;">Page: /admin</div>
+    <div style="padding:48px;">
+      <h1 style="margin:0 0 32px; font-family:'Syne'; font-weight:800; font-size:30px; color:#F7F7F5;">Admin Overview</h1>
+      <div style="display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1px; background:#27272A; border-radius:12px; overflow:hidden; margin-bottom:40px;">
+        <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
+          <div style="background:#18181B; padding:24px;"><div style="font-family:'Manrope'; font-size:12px; color:#71717A;">{{ s.label }}</div><div style="font-family:'Syne'; font-weight:800; font-size:26px; color:#F7F7F5; margin-top:8px;">{{ s.value }}</div></div>
+        </sc-for>
+      </div>
+      <div style="font-family:'Manrope'; font-weight:700; font-size:12px; letter-spacing:0.1em; color:#71717A; margin-bottom:16px;">FLAGGED FOR REVIEW</div>
+      <div style="display:flex; flex-direction:column; gap:1px; background:#27272A; border-radius:10px; overflow:hidden;">
+        <sc-for list="{{ flagged }}" as="f" hint-placeholder-count="4">
+          <div style="background:#18181B; padding:16px 20px; display:flex; justify-content:space-between;"><span style="font-family:'Manrope'; font-weight:600; font-size:13px; color:#F7F7F5;">{{ f.item }}</span><span style="font-family:'Manrope'; font-weight:700; font-size:11px; color:#F59E0B;">{{ f.type }}</span></div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOBILE -->
+  <div style="max-width:375px; margin:64px auto; border:1px solid #27272A; border-radius:20px; overflow:hidden; background:#09090B;">
+    <div style="font-family:'Manrope'; font-weight:700; font-size:10px; letter-spacing:0.1em; color:#71717A; text-align:center; padding:8px; background:#050506;">MOBILE — /admin</div>
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #27272A;">
+      <div style="display:flex; align-items:center; gap:8px;"><img src="../uploads/ChatGPT Image Sep 15, 2026, 05_05_17 PM.png" style="width:20px; height:20px; object-fit:contain; filter:invert(1);" /><span style="font-family:'Syne'; font-weight:800; font-size:14px; color:#F7F7F5;">Auxdrop</span></div>
+      <div style="width:22px; height:16px; display:flex; flex-direction:column; justify-content:space-between;"><span style="height:2px; background:#F7F7F5;"></span><span style="height:2px; background:#F7F7F5;"></span><span style="height:2px; background:#F7F7F5;"></span></div>
+    </div>
+    <div style="padding:28px 20px; display:flex; flex-direction:column; gap:14px;">
+      <h1 style="margin:0; font-family:'Syne'; font-weight:800; font-size:22px; color:#F7F7F5;">Admin Dashboard</h1>
+      <div style="font-family:'Manrope'; font-size:13px; color:#A1A1AA; line-height:1.5;">Content reflows to a single column on mobile, following the same components, type, and color system as desktop.</div>
+    </div>
+  </div>
+</div>
+]]>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+<![CDATA[
+class Component extends DCLogic {
+  renderVals() {
+    const navItems = ['Admin Dashboard','Battle Management','User Management','Submission Review','Shop Moderation','Release Management','Royalty Management','CMS','Financial Reporting','Dispute Resolution'];
+    const nav = navItems.map((name,i) => ({ name, href: name+'.dc.html', color: i===0?'#F7F7F5':'#A1A1AA', bg: i===0?'#18181B':'transparent' }));
+    return {
+      nav,
+      stats: [{label:'Active battles',value:'6'},{label:'Pending submissions',value:'214'},{label:'Open disputes',value:'3'},{label:'Users flagged',value:'2'}],
+      flagged: [{item:'Submission — Battle 014 #4421',type:'Duplicate audio'},{item:'Shop listing — "Type Beat"',type:'Rights unclear'},{item:'User report — spam DMs',type:'Community'},{item:'Payout dispute — #8821',type:'Finance'}],
+    };
+  }
+}
+]]>
+</script>
+</body>
+</html>

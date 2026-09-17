@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<![CDATA[
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#050506;font-family:'Manrope',sans-serif;} a{color:#FF3B30;text-decoration:none;} a:hover{color:#ff5c53;}</style>
+</helmet>
+<div style="min-height:100vh; background:#050506;">
+  <div style="max-width:1440px; margin:0 auto; background:#09090B; border-left:1px solid #27272A; border-right:1px solid #27272A;">
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:22px 64px; border-bottom:1px solid #27272A;">
+      <a href="Home.dc.html" style="display:flex; align-items:center; gap:10px;"><img src="../uploads/ChatGPT Image Sep 15, 2026, 05_05_17 PM.png" style="width:26px; height:26px; object-fit:contain; filter:invert(1);" /><span style="font-family:'Syne'; font-weight:800; font-size:18px; color:#F7F7F5;">Auxdrop</span></a>
+      <a href="Design System.dc.html" style="font-family:'Manrope'; font-weight:600; font-size:14px; color:#A1A1AA;">Design System</a>
+    </div>
+    <div style="padding:56px 64px;">
+      <div style="font-family:'Manrope'; font-size:12px; color:#71717A; margin-bottom:8px;">Page: /ui-states</div>
+      <h1 style="margin:0 0 40px; font-family:'Syne'; font-weight:800; font-size:34px; color:#F7F7F5;">UI States</h1>
+
+      <div style="font-family:'Manrope'; font-weight:700; font-size:12px; letter-spacing:0.1em; color:#71717A; margin-bottom:16px;">SHOP</div>
+      <div style="display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-bottom:40px;">
+        <sc-for list="{{ shopStates }}" as="s" hint-placeholder-count="4"><div style="background:#18181B; border:1px solid #27272A; border-radius:10px; padding:20px;"><span style="font-family:'Manrope'; font-weight:700; font-size:11px; color:{{ s.color }};">{{ s.label }}</span><div style="font-family:'Manrope'; font-size:12px; color:#71717A; margin-top:8px;">{{ s.desc }}</div></div></sc-for>
+      </div>
+
+      <div style="font-family:'Manrope'; font-weight:700; font-size:12px; letter-spacing:0.1em; color:#71717A; margin-bottom:16px;">BATTLE SUBMISSION</div>
+      <div style="display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:14px; margin-bottom:40px;">
+        <sc-for list="{{ submissionStates }}" as="s" hint-placeholder-count="5"><div style="background:#18181B; border:1px solid #27272A; border-radius:10px; padding:20px;"><span style="font-family:'Manrope'; font-weight:700; font-size:11px; color:{{ s.color }};">{{ s.label }}</span><div style="font-family:'Manrope'; font-size:12px; color:#71717A; margin-top:8px;">{{ s.desc }}</div></div></sc-for>
+      </div>
+
+      <div style="font-family:'Manrope'; font-weight:700; font-size:12px; letter-spacing:0.1em; color:#71717A; margin-bottom:16px;">WALLET</div>
+      <div style="display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-bottom:40px;">
+        <sc-for list="{{ walletStates }}" as="s" hint-placeholder-count="4"><div style="background:#18181B; border:1px solid #27272A; border-radius:10px; padding:20px;"><span style="font-family:'Manrope'; font-weight:700; font-size:11px; color:{{ s.color }};">{{ s.label }}</span><div style="font-family:'Manrope'; font-size:12px; color:#71717A; margin-top:8px;">{{ s.desc }}</div></div></sc-for>
+      </div>
+
+      <div style="font-family:'Manrope'; font-weight:700; font-size:12px; letter-spacing:0.1em; color:#71717A; margin-bottom:16px;">RESULTS</div>
+      <div style="display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-bottom:40px;">
+        <sc-for list="{{ resultsStates }}" as="s" hint-placeholder-count="4"><div style="background:#18181B; border:1px solid #27272A; border-radius:10px; padding:20px;"><span style="font-family:'Manrope'; font-weight:700; font-size:11px; color:{{ s.color }};">{{ s.label }}</span><div style="font-family:'Manrope'; font-size:12px; color:#71717A; margin-top:8px;">{{ s.desc }}</div></div></sc-for>
+      </div>
+
+      <div style="font-family:'Manrope'; font-weight:700; font-size:12px; letter-spacing:0.1em; color:#71717A; margin-bottom:16px;">GLOBAL (LOADING / SUCCESS / ERROR / EMPTY)</div>
+      <div style="display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px;">
+        <div style="background:#18181B; border:1px solid #27272A; border-radius:10px; padding:24px; text-align:center;"><div style="width:24px; height:24px; border:2px solid #27272A; border-top-color:#7C3AED; border-radius:50%; margin:0 auto 12px;"></div><span style="font-family:'Manrope'; font-weight:700; font-size:11px; color:#7C3AED;">LOADING</span></div>
+        <div style="background:#18181B; border:1px solid #27272A; border-radius:10px; padding:24px; text-align:center;"><div style="width:24px; height:24px; border-radius:50%; background:rgba(34,197,94,0.14); display:flex; align-items:center; justify-content:center; margin:0 auto 12px;"><span style="width:8px; height:8px; border-radius:50%; background:#22C55E;"></span></div><span style="font-family:'Manrope'; font-weight:700; font-size:11px; color:#22C55E;">SUCCESS</span></div>
+        <div style="background:#18181B; border:1px solid #27272A; border-radius:10px; padding:24px; text-align:center;"><div style="width:24px; height:24px; border-radius:50%; background:rgba(239,68,68,0.14); display:flex; align-items:center; justify-content:center; margin:0 auto 12px;"><span style="width:8px; height:8px; border-radius:50%; background:#EF4444;"></span></div><span style="font-family:'Manrope'; font-weight:700; font-size:11px; color:#EF4444;">ERROR</span><div style="font-family:'Manrope'; font-size:11px; color:#71717A; margin-top:6px;">Something went wrong. Try again.</div></div>
+        <div style="background:#18181B; border:1px solid #27272A; border-radius:10px; padding:24px; text-align:center;"><span style="font-family:'Manrope'; font-weight:700; font-size:11px; color:#71717A;">EMPTY</span><div style="font-family:'Manrope'; font-size:11px; color:#71717A; margin-top:6px;">Nothing here yet.</div></div>
+      </div>
+    </div>
+    <div style="padding:28px 64px; border-top:1px solid #27272A; font-family:'Manrope'; font-size:12px; color:#71717A;">© 2026 Auxdrop</div>
+  </div>
+
+  <!-- MOBILE -->
+  <div style="max-width:375px; margin:64px auto; border:1px solid #27272A; border-radius:20px; overflow:hidden; background:#09090B;">
+    <div style="font-family:'Manrope'; font-weight:700; font-size:10px; letter-spacing:0.1em; color:#71717A; text-align:center; padding:8px; background:#050506;">MOBILE — /ui-states</div>
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #27272A;">
+      <div style="display:flex; align-items:center; gap:8px;"><img src="../uploads/ChatGPT Image Sep 15, 2026, 05_05_17 PM.png" style="width:20px; height:20px; object-fit:contain; filter:invert(1);" /><span style="font-family:'Syne'; font-weight:800; font-size:14px; color:#F7F7F5;">Auxdrop</span></div>
+      <div style="width:22px; height:16px; display:flex; flex-direction:column; justify-content:space-between;"><span style="height:2px; background:#F7F7F5;"></span><span style="height:2px; background:#F7F7F5;"></span><span style="height:2px; background:#F7F7F5;"></span></div>
+    </div>
+    <div style="padding:28px 20px; display:flex; flex-direction:column; gap:14px;">
+      <h1 style="margin:0; font-family:'Syne'; font-weight:800; font-size:22px; color:#F7F7F5;">UI States</h1>
+      <div style="font-family:'Manrope'; font-size:13px; color:#A1A1AA; line-height:1.5;">Content reflows to a single column on mobile, following the same components, type, and color system as desktop.</div>
+    </div>
+  </div>
+</div>
+]]>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+<![CDATA[
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      shopStates: [{label:'FEATURED',color:'#7C3AED',desc:'Surfaced on Shop home.'},{label:'EMPTY',color:'#71717A',desc:'No beats match this filter.'},{label:'PENDING REVIEW',color:'#F59E0B',desc:'Awaiting rights clearance.'},{label:'SOLD',color:'#22C55E',desc:'Exclusive license sold.'}],
+      submissionStates: [{label:'DRAFT',color:'#71717A',desc:'Not yet submitted.'},{label:'UPLOADING',color:'#3B82F6',desc:'Audio transferring.'},{label:'PROCESSING',color:'#F59E0B',desc:'Checking format.'},{label:'APPROVED',color:'#22C55E',desc:'Entered into the Battle.'},{label:'NEEDS CHANGES',color:'#EF4444',desc:'Resubmit before deadline.'}],
+      walletStates: [{label:'PENDING',color:'#F59E0B',desc:'Clears in 3-5 days.'},{label:'AVAILABLE',color:'#22C55E',desc:'Ready to withdraw.'},{label:'WITHDRAWAL REQUESTED',color:'#3B82F6',desc:'Transfer initiated.'},{label:'COMPLETED',color:'#71717A',desc:'Paid out.'}],
+      resultsStates: [{label:'WINNER',color:'#FFD166',desc:'Ranking updated upward.'},{label:'RUNNER-UP',color:'#A1A1AA',desc:'Points awarded.'},{label:'ELIMINATED',color:'#71717A',desc:'No review.'},{label:'SELECTED FOR RELEASE',color:'#7C3AED',desc:'Added to next compilation.'}],
+    };
+  }
+}
+]]>
+</script>
+</body>
+</html>

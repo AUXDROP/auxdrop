@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<![CDATA[
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#050506;font-family:'Manrope',sans-serif;} a{color:#FF3B30;text-decoration:none;} a:hover{color:#ff5c53;}</style>
+</helmet>
+<div style="min-height:100vh; background:#050506;">
+  <div style="max-width:1440px; margin:0 auto; background:#09090B; border-left:1px solid #27272A; border-right:1px solid #27272A;">
+    <div style="padding:24px 64px; font-family:'Manrope'; font-size:12px; color:#71717A;">Page: /verify-email</div>
+    <div style="padding:60px 64px 120px; display:flex; justify-content:center; text-align:center;">
+      <div style="width:100%; max-width:420px; display:flex; flex-direction:column; align-items:center; gap:20px;">
+        <div style="width:64px; height:64px; border-radius:50%; background:rgba(124,58,237,0.14); border:1px solid rgba(124,58,237,0.3); display:flex; align-items:center; justify-content:center;"><span style="width:10px; height:10px; border-radius:50%; background:#7C3AED;"></span></div>
+        <h1 style="margin:0; font-family:'Syne'; font-weight:800; font-size:26px; color:#F7F7F5;">Verify your email</h1>
+        <p style="margin:0; font-family:'Manrope'; font-size:14px; color:#A1A1AA;">We sent a verification link to jordan@auxdrop.com. Click it to activate your account.</p>
+        <a href="Onboarding.dc.html" style="font-family:'Manrope'; font-weight:700; font-size:15px; color:#F7F7F5; background:#FF3B30; border-radius:8px; padding:16px 28px;">I've verified my email</a>
+        <span style="font-family:'Manrope'; font-size:12px; color:#71717A;">Didn't get it? Resend</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOBILE -->
+  <div style="max-width:375px; margin:64px auto; border:1px solid #27272A; border-radius:20px; overflow:hidden; background:#09090B;">
+    <div style="font-family:'Manrope'; font-weight:700; font-size:10px; letter-spacing:0.1em; color:#71717A; text-align:center; padding:8px; background:#050506;">MOBILE — /verify-email</div>
+    <div style="padding:40px 20px; display:flex; flex-direction:column; align-items:center; gap:16px; text-align:center;">
+      <h1 style="margin:0; font-family:'Syne'; font-weight:800; font-size:20px; color:#F7F7F5;">Verify your email</h1>
+      <p style="margin:0; font-family:'Manrope'; font-size:13px; color:#A1A1AA;">Check your inbox for a verification link.</p>
+    </div>
+  </div>
+</div>
+]]>
+</x-dc>
+</body>
+</html>
