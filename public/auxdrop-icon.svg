@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1254 1254">
+  <path fill="#09090B" fill-rule="evenodd" d="
+    M285 841
+    L389 840
+    L465 676
+    L510 655
+    L626 453
+    L742 655
+    L786 675
+    L863 841
+    L968 841
+    L674 346
+    L654 345
+    L579 346
+    Z"/>
+  <rect x="489" y="707" width="38" height="103" rx="19" fill="#09090B"/>
+  <rect x="547" y="645" width="40" height="214" rx="20" fill="#09090B"/>
+  <rect x="605" y="576" width="43" height="335" rx="21.5" fill="#09090B"/>
+  <rect x="666" y="645" width="40" height="214" rx="20" fill="#09090B"/>
+  <rect x="726" y="707" width="38" height="103" rx="19" fill="#09090B"/>
+</svg>
