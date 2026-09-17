@@ -9,13 +9,18 @@ as locked in.
 ## Core entities
 
 ### User
-The base account. Specializes into beatmaker, audience member, sponsor/brand,
-or industry (A&R/sync) — likely a `role` or `type` field, or separate profile
-tables joined to a shared `User`.
+The base account — single auth identity for everyone, backed by Supabase
+Auth (`User.id` matches the Supabase `auth.users.id` UUID; email verification,
+password/OAuth are handled by Supabase Auth itself, not duplicated here).
+Role-specific data lives in a separate 1:1 profile table per role rather
+than as columns on `User` (see `BeatmakerProfile` below; `SponsorProfile` /
+`IndustryProfile` follow the same pattern whenever they're built).
 
-- id, email, handle/username, avatar, role(s), created_at
-- auth state: email_verified, password (or OAuth)
-- Onboarding fields: genre(s), primary role (producer/audience/brand/industry)
+- id (uuid, matches `auth.users.id`), email, handle/username, avatar, created_at
+- `role`: enum — `BEATMAKER`, `AUDIENCE` (live now); `SPONSOR`, `INDUSTRY`
+  reserved (values exist so the enum never needs a migration, but there is no
+  signup UI for them — see "Resolved decisions" below)
+- Onboarding fields: genre(s) — deferred until the Onboarding page is built
 
 ### BeatmakerProfile
 Public-facing profile for a beatmaker (`Beatmaker Profile.dc.html`).
@@ -37,10 +42,13 @@ A single challenge instance (`battles` data loop; `Beat Battles.dc.html`,
   see design system)
 - entry_fee (default $25), prize_pool (derived or set), entrant_count
 - starts_at, duration (60 min default), submission_deadline
-- judging_type: blind community / judge panel
+- `judging_type`: enum — `COMMUNITY | JUDGE_PANEL | HYBRID`, configurable
+  per-battle, defaults to `COMMUNITY` for Phase 1. Determines how `Judgment`
+  rows for this battle get aggregated into a result; judge assignments
+  (`BattleJudge`) only apply when this isn't `COMMUNITY`.
 - sponsor_id (nullable, FK → Sponsor) — for sponsored challenges
-- bracket structure for tournament-style battles (`bracket` data loop —
-  `Championship.dc.html`)
+- Tournament/bracket play (`Championship.dc.html`) is **not** modeled on
+  `Battle` — see the `Tournament` note under BattleResult below.
 
 ### Submission
 A beatmaker's entry into a Battle (`submissions` data loop; `Submission Review.dc.html`).
@@ -49,6 +57,26 @@ A beatmaker's entry into a Battle (`submissions` data loop; `Submission Review.d
 - status: pending review / accepted / flagged / disqualified
 - `submissionStates` — the mockups have a dedicated states loop, meaning this
   needs an explicit state machine, not just a boolean.
+
+### Judgment
+A single judgment cast on a Submission — by a community member or an
+assigned judge, depending on the Battle's `judging_type`. One entity covers
+both cases rather than separate `Vote`/`Judgment` tables, so a battle can be
+pure community, a judge panel, or a hybrid of both without a schema change.
+
+- id, battle_id (FK), submission_id (FK), judged_by (FK → User)
+- `judge_role`: enum — `COMMUNITY | JUDGE` (which capacity this judgment was
+  cast in)
+- score (or rank), optional criteria breakdown
+- one judgment per (submission, judged_by) pair
+
+### BattleJudge
+Assigns a `User` as a judge for a specific Battle. Only relevant when that
+Battle's `judging_type` is `JUDGE_PANEL` or `HYBRID` — empty for `COMMUNITY`
+battles. No judge-assignment UI yet (that's build-order step 4); the table
+exists now so the schema doesn't block it later.
+
+- battle_id (FK), user_id (FK)
 
 ### Track / Beat
 The actual audio asset (`Beat Detail.dc.html`, referenced everywhere the audio
@@ -62,17 +90,22 @@ player appears).
 
 ### BattleResult / Ranking
 Outcome of a battle for a participant (`outcomes`, `resultsStates` data loops;
-`Results.dc.html`, `Charts.dc.html`).
+`Results.dc.html`, `Charts.dc.html`). Placement/score is computed from that
+battle's `Judgment` rows, aggregated per `judging_type`.
 
-- battle_id, user_id, placement, score/vote breakdown, advanced (bool, for
-  bracket play)
+- battle_id, user_id, placement, score/vote breakdown, advanced (bool)
 - Feeds into BeatmakerProfile's aggregate rank + win/loss record
+- **Tournament/Championship** (Phase 3 only): a separate `Tournament` entity
+  composes ordinary (always 1-shot) `Battle` rows into rounds/matchups.
+  `advanced` is what lets a participant's result in one round's `Battle`
+  qualify them for the next round's `Battle`. `Battle` itself never gets
+  bracket/round fields — deferred entirely until Phase 3.
 
 ### Release
 A commercial output — season compilation album (`releases` data loop;
 `Releases.dc.html`, `Release Management.dc.html`).
 
-- id, title (e.g. "Auxdrop Vol. X"), season, tracklist (Track IDs)
+- id, title (e.g. "AUXDROP Vol. X"), season, tracklist (Track IDs)
 - DSP distribution status/links (Spotify/Apple Music/Tidal)
 - royalty_split config (references RoyaltySplit)
 
@@ -101,6 +134,10 @@ Standard commerce flow (`Cart.dc.html`, `Checkout.dc.html`).
 
 ### Wallet / Transaction
 Beatmaker earnings ledger (`walletStates` data loop; `Wallet.dc.html`).
+**Not designed yet** — payment processor direction is Stripe Connect
+(pending confirmation of operating countries), targeted for build-order
+step 7. Until then, don't design anything elsewhere in the schema that
+would conflict with Connect's connected-account/split-payment model.
 
 - wallet: user_id, balance, pending_balance
 - transaction: id, wallet_id, type (entry fee, prize payout, royalty, kit
@@ -119,12 +156,20 @@ Judging/content dispute (`disputes`, `flagged` data loops; `Dispute Resolution.d
 
 ### Sponsor
 Brand sponsoring challenges (`packages` data loop; `Sponsor Portal.dc.html`).
+Phase 3. Sponsor accounts are **staff-onboarded** (sales-driven deals, per
+the business plan), not self-serve signup — created via an admin tool or
+seed script once Sponsor Portal is built, using the reserved `User.role =
+SPONSOR`. `SponsorProfile` (this entity, 1:1 with `User`) isn't designed
+yet; built alongside Sponsor Portal in Phase 3.
 
 - id, company_name, sponsorship packages purchased, sponsored battle_ids
 
 ### IndustryContact
 A&R/sync/label industry account (`Industry Portal.dc.html`, `catalog` /
 `pathways` loops) — access to the sync catalog and talent discovery.
+Phase 3. Same staff-onboarded pattern as Sponsor (curated introductions, not
+public signup) — reserved `User.role = INDUSTRY`, `IndustryProfile` not
+designed yet.
 
 ### Notification
 `notifications` data loop; `Notifications.dc.html`.
@@ -144,13 +189,33 @@ A&R/sync/label industry account (`Industry Portal.dc.html`, `catalog` /
 - **License type enum**: `NON_EXCLUSIVE | EXCLUSIVE | STEMS`
 - **Commercial badge enum**: `OFFICIAL_DSP_RELEASE | SOUND_KIT_CONTRIBUTOR |
   SYNC_ROSTER_QUALIFIED | LICENSE_AVAILABLE_*`
+- **Judging type enum**: `COMMUNITY | JUDGE_PANEL | HYBRID` — on `Battle`.
+- **Judge role enum**: `COMMUNITY | JUDGE` — on `Judgment`.
 
-## Open questions to resolve with the user before finalizing schema
+## Resolved decisions
 
-- Exact judging mechanism: pure community vote vs. judge panel vs. hybrid —
-  affects whether a `Vote`/`Judgment` entity is needed alongside Submission.
-- Whether Battles are always 1-shot or also bracket/tournament (`bracket` data
-  suggests tournament support is needed at least for Championship).
-- Payment processor and payout provider (affects Wallet/Transaction fields).
-- Whether "Industry Portal" and "Sponsor Portal" are separate account types or
-  a permission/role on the base User.
+The four open questions below have been resolved with the user (2026-09-17).
+
+1. **Sponsor/Industry — separate tables or a role on `User`?** Both: `User`
+   carries a `role` enum for auth/access control (`BEATMAKER`, `AUDIENCE` live;
+   `SPONSOR`, `INDUSTRY` reserved), and role-specific data lives in a 1:1
+   profile table per role (`BeatmakerProfile` now; `SponsorProfile` /
+   `IndustryProfile` later), the same pattern throughout. Sponsor/Industry
+   accounts are staff-onboarded, not self-serve — no signup UI for those two
+   roles.
+2. **Judging mechanism — community vote vs. judge panel vs. hybrid?** One
+   `Judgment` entity handles all three, discriminated by `judge_role` and
+   aggregated per the battle's `judging_type` (`COMMUNITY | JUDGE_PANEL |
+   HYBRID`), configurable per-battle from day one. Default for Phase 1
+   battles is `COMMUNITY`. `BattleJudge` assigns judges when needed. No
+   judge-panel UI yet — schema groundwork only, built at step 2; the UI is
+   step 4.
+3. **Are Battles always 1-shot, or also bracket/tournament?** `Battle` is
+   always 1-shot. Bracket/tournament structure is a separate `Tournament`
+   entity (Phase 3 only) that composes ordinary `Battle` rows via
+   `BattleResult.advanced` — no fields added to `Battle` itself.
+4. **Payment processor and payout provider?** Direction is Stripe Connect,
+   pending the user's confirmation of operating countries. No payment
+   integration work yet; `Wallet`/`Transaction`/`Order` design is deferred to
+   build-order step 7 and must not be designed in a way that conflicts with
+   Connect's connected-account/split-payment model in the meantime.

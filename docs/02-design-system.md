@@ -7,7 +7,7 @@ only (see `docs/05-build-plan.md` for why).
 
 ## Brand
 
-- Wordmark: **Auxdrop** — set in Syne, weight 800.
+- Wordmark: **AUXDROP** — set in Syne, weight 800.
 - Icon: `design/assets/auxdrop_original_icon.svg` — an "A" built from a
   waveform, in `#09090B` (near-black). On dark backgrounds throughout the
   mockups it's shown inverted (white) — treat the icon as recolorable, not a
@@ -17,12 +17,12 @@ only (see `docs/05-build-plan.md` for why).
 
 | Name | Hex | Token | Usage |
 |---|---|---|---|
-| Auxdrop Black | `#050506` | `bg-canvas` | outer page background |
-| Auxdrop Dark | `#09090B` / `#18181B` | `bg-primary` / `bg-elevated` | page shell / cards, inputs |
-| Auxdrop White | `#F7F7F5` | `text-on-dark` | primary text on dark |
+| AUXDROP Black | `#050506` | `bg-canvas` | outer page background |
+| AUXDROP Dark | `#09090B` / `#18181B` | `bg-primary` / `bg-elevated` | page shell / cards, inputs |
+| AUXDROP White | `#F7F7F5` | `text-on-dark` | primary text on dark |
 | Border | `#27272A` | `border-default` | all hairline borders |
-| Auxdrop Signal (red) | `#FF3B30` | `action-primary` | primary buttons, links, played-waveform, active nav |
-| Auxdrop Electric (violet) | `#7C3AED` | `accent` | focus rings, "licensing review" / "sync roster" status, scrub state |
+| AUXDROP Signal (red) | `#FF3B30` | `action-primary` | primary buttons, links, played-waveform, active nav |
+| AUXDROP Electric (violet) | `#7C3AED` | `accent` | focus rings, "licensing review" / "sync roster" status, scrub state |
 | Muted text | `#A1A1AA` | `text-muted` | secondary text, nav labels |
 | Faint text | `#71717A` | `text-faint` | eyebrow labels, timestamps, section labels |
 

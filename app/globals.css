@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens — see docs/02-design-system.md for the source of truth.
+ * This is a dark-mode-only product; there is no light-theme variant.
+ */
+@theme {
+  --color-canvas: #050506;
+  --color-primary: #09090b;
+  --color-elevated: #18181b;
+  --color-on-dark: #f7f7f5;
+  --color-border: #27272a;
+  --color-signal: #ff3b30;
+  --color-accent: #7c3aed;
+  --color-muted: #a1a1aa;
+  --color-faint: #71717a;
+
+  --color-status-open: #22c55e;
+  --color-status-upcoming: #3b82f6;
+  --color-status-pending: #f59e0b;
+  --color-status-error: #ef4444;
+  --color-status-licensing: #7c3aed;
+  --color-status-completed: #a1a1aa;
+
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-syne), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-button: 8px;
+  --radius-input: 10px;
+  --radius-card: 12px;
+  --radius-pill: 100px;
+}
+
+body {
+  font-family: var(--font-sans);
+}

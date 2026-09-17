@@ -30,31 +30,32 @@ If you want to view a mockup page's rendered look before rebuilding it, ask
 Claude (in claude.ai) to open it via the Design artifact tool rather than
 treating the raw file as runnable code.
 
-## Recommended stack (adjust to the user's actual preference before starting)
+## Confirmed stack
 
-No stack has been confirmed with the user yet. A reasonable default for a
-data-heavy, auth-gated, commerce-enabled web app like this:
+The user has confirmed the stack below. Scaffolding should follow this, not
+the earlier recommendation.
 
-- **Frontend:** React (Next.js) — SSR/SEO matters for the public marketing
-  pages (Home, About, How It Works, Beatmaker/Beat detail pages meant to be
-  discoverable), while the logged-in app (Dashboard, Battles, Shop) can be
-  client-rendered.
+- **Frontend:** Next.js (App Router, TypeScript) — SSR/SEO matters for the
+  public marketing pages (Home, About, How It Works, Beatmaker/Beat detail
+  pages meant to be discoverable), while the logged-in app (Dashboard,
+  Battles, Shop) can be client-rendered.
 - **Styling:** Tailwind, with the tokens in `docs/02-design-system.md` set up
   as custom theme values (colors, font families, radii) rather than hardcoded
   hex values scattered through components.
-- **Backend/DB:** whatever the user already has infra for; if greenfield, a
-  Postgres-backed API (or a managed backend) fits the relational data model
-  in `docs/04-data-model.md` well — battles/submissions/results/royalties are
-  all relational with clear foreign keys.
+- **Database/ORM:** Prisma against Supabase Postgres. The schema in
+  `docs/04-data-model.md` is still a first pass — don't lock in
+  `prisma/schema.prisma` models until the open questions at the bottom of
+  that doc are resolved with the user. Scaffold the Prisma project/datasource
+  now; write real models alongside the battle-loop build step.
+- **Backend/Auth:** Supabase (Postgres + Supabase Auth + storage). Auth wiring
+  happens at build-order step 2, not during initial scaffolding.
 - **Audio:** needs real waveform generation + playback (the audio-player-bar
   is used everywhere) — plan for an audio processing step on upload (e.g.
-  generate a waveform peaks file) rather than computing it client-side each time.
+  generate a waveform peaks file) rather than computing it client-side each
+  time. Track/beat audio files are a good fit for Supabase Storage.
 - **Payments/payouts:** entry fees, shop purchases, and creator payouts are
   three different money-movement flows (charge, charge, payout) — confirm the
   payment processor early since it shapes the Wallet/Transaction/Order schema.
-
-**Ask the user to confirm or override this stack before scaffolding a repo** —
-this section is a starting recommendation, not a decision that's been made.
 
 ## Suggested build order
 
