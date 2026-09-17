@@ -11,3 +11,118 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+// --- Auth & account shell (build-order step 2) -----------------------------
+//
+// Identity/auth (email verification, password/OAuth, sessions) is handled by
+// Supabase Auth, not by these models. `User.id` matches the corresponding
+// `auth.users.id` UUID; app code creates the `User` row after Supabase Auth
+// creates the account.
+
+enum UserRole {
+  BEATMAKER
+  AUDIENCE
+
+  // Reserved for Phase 3 (Sponsor Portal / Industry Portal). Staff-onboarded
+  // only (admin tool / seed script) — there is no signup UI for these roles.
+  SPONSOR
+  INDUSTRY
+}
+
+model User {
+  id        String   @id @db.Uuid
+  email     String   @unique
+  handle    String   @unique
+  avatarUrl String?
+  role      UserRole
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  beatmakerProfile BeatmakerProfile?
+  submissions      Submission[]
+  judgments        Judgment[]
+  judgeAssignments BattleJudge[]
+}
+
+model BeatmakerProfile {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @unique @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  bio String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// --- Judging groundwork (build-order step 2 schema; UI is step 4) ----------
+//
+// `Battle` and `Submission` below are placeholders — just enough to give
+// `Judgment` a real relation target. Their full fields (entry fee, prize
+// pool, timing, submission state machine, etc.) are designed at step 4.
+
+enum JudgingType {
+  COMMUNITY
+  JUDGE_PANEL
+  HYBRID
+}
+
+model Battle {
+  id          String      @id @default(uuid()) @db.Uuid
+  title       String
+  judgingType JudgingType @default(COMMUNITY)
+  createdAt   DateTime    @default(now())
+
+  submissions Submission[]
+  judgments   Judgment[]
+  judges      BattleJudge[]
+}
+
+model Submission {
+  id        String   @id @default(uuid()) @db.Uuid
+  battleId  String   @db.Uuid
+  battle    Battle   @relation(fields: [battleId], references: [id], onDelete: Cascade)
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  judgments Judgment[]
+
+  @@unique([battleId, userId])
+}
+
+enum JudgeRole {
+  COMMUNITY
+  JUDGE
+}
+
+model Judgment {
+  id           String     @id @default(uuid()) @db.Uuid
+  battleId     String     @db.Uuid
+  battle       Battle     @relation(fields: [battleId], references: [id], onDelete: Cascade)
+  submissionId String     @db.Uuid
+  submission   Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  judgedById   String     @db.Uuid
+  judgedBy     User       @relation(fields: [judgedById], references: [id], onDelete: Cascade)
+
+  judgeRole JudgeRole
+  score     Int
+  criteria  Json?
+
+  createdAt DateTime @default(now())
+
+  @@unique([submissionId, judgedById])
+}
+
+// Judge assignments — only used when Battle.judgingType != COMMUNITY.
+model BattleJudge {
+  id       String @id @default(uuid()) @db.Uuid
+  battleId String @db.Uuid
+  battle   Battle @relation(fields: [battleId], references: [id], onDelete: Cascade)
+  userId   String @db.Uuid
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([battleId, userId])
+}
