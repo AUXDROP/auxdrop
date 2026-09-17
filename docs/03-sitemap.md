@@ -86,6 +86,13 @@ rather than as one big "admin" milestone.
 
 ## Notes for whoever builds routing
 
+- Home/About/How It Works (step 3) shipped with nav items and CTAs that point
+  at pages later steps haven't built yet (Beat Battles, Charts, Beatmakers,
+  Shop, Releases, TV; "Enter a Battle"). Nav items without a route render as
+  inert (non-clickable) text rather than a dead link; "Enter a Battle" CTAs
+  point at `/signup` as a temporary stand-in. Wire these to their real routes
+  as each step lands — `components/layout/MarketingHeader.tsx`'s `HOME_NAV`/
+  `SUBPAGE_NAV` arrays are where the `href`s get added.
 - Detail-page routes marked `(inferred)` don't have an explicit path in the
   mockup — confirm the real slug/ID scheme (e.g. numeric ID vs. slug vs. handle)
   before wiring up real data.

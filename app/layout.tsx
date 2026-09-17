@@ -15,9 +15,17 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "AUXDROP",
+  metadataBase: new URL("https://auxdrop.com"),
+  title: "AUXDROP — Beatmakers. Go head-to-head.",
   description:
-    "AUXDROP — the competitive music-production battle network.",
+    "Compete in timed Beat Battles, build your Beatmaker profile, and sell beats in your own Shop. Sign up for early access.",
+  openGraph: {
+    siteName: "AUXDROP",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
