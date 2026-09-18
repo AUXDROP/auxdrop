@@ -32,6 +32,11 @@ Public-facing profile for a beatmaker (`Beatmaker Profile.dc.html`).
   CONTRIBUTOR, SYNC ROSTER QUALIFIED, LICENSE AVAILABLE: NON-EXCLUSIVE /
   EXCLUSIVE / STEMS
 - follower/following relationships (`Following.dc.html`)
+- **Not yet modeled, found while building step 4**: verified-beatmaker status,
+  location, genre tags, commercial badges, and career earnings (needs
+  Wallet/Transaction, step 7). Beatmaker Profile (`/beatmakers/:handle`)
+  currently shows only handle, bio, and computed battle stats — these mockup
+  fields are omitted rather than faked.
 
 ### Battle
 A single challenge instance (`battles` data loop; `Beat Battles.dc.html`,
@@ -47,6 +52,10 @@ A single challenge instance (`battles` data loop; `Beat Battles.dc.html`,
   rows for this battle get aggregated into a result; judge assignments
   (`BattleJudge`) only apply when this isn't `COMMUNITY`.
 - sponsor_id (nullable, FK → Sponsor) — for sponsored challenges
+- **Not yet modeled, found while building step 4**: a longer challenge
+  brief/description text (Battle Detail's "CHALLENGE" paragraph — `title` is
+  only the short prompt) and BPM. Battle Detail currently omits both rather
+  than fake them.
 - Tournament/bracket play (`Championship.dc.html`) is **not** modeled on
   `Battle` — see the `Tournament` note under BattleResult below.
 

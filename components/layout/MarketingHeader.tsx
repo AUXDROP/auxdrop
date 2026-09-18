@@ -7,9 +7,9 @@ interface NavItem {
 }
 
 const HOME_NAV: NavItem[] = [
-  { label: "Beat Battles" },
-  { label: "Charts" },
-  { label: "Beatmakers" },
+  { label: "Beat Battles", href: "/battles" },
+  { label: "Charts", href: "/rankings" },
+  { label: "Beatmakers", href: "/beatmakers" },
   { label: "Shop" },
   { label: "Releases" },
   { label: "TV" },
@@ -18,7 +18,7 @@ const HOME_NAV: NavItem[] = [
 const SUBPAGE_NAV: NavItem[] = [
   { label: "About", href: "/about" },
   { label: "How It Works", href: "/how-it-works" },
-  { label: "Beat Battles" },
+  { label: "Beat Battles", href: "/battles" },
 ];
 
 function NavLink({ item, active }: { item: NavItem; active: boolean }) {
@@ -75,11 +75,11 @@ export function MarketingHeader({
           </Link>
         </div>
       ) : (
-        // The mockup points this at Battle Detail, which doesn't exist yet —
-        // routes to signup instead so the one real thing you can do (create
-        // an account) is never a dead end.
+        // The mockup points this at a specific Battle Detail — routes to the
+        // Beat Battles list instead, which is real now and explains there's
+        // nothing open yet (with its own signup CTA) rather than a dead end.
         <Link
-          href="/signup"
+          href="/battles"
           className="rounded-button bg-signal px-5 py-2.5 font-sans text-[13px] font-bold text-on-dark"
         >
           Enter a Battle

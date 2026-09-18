@@ -78,7 +78,7 @@ export default function HowItWorksPage() {
         </div>
 
         <div className="mt-auto">
-          <MarketingFooter cta={{ label: "Enter a Battle", href: "/signup" }} />
+          <MarketingFooter cta={{ label: "Enter a Battle", href: "/battles" }} />
         </div>
       </div>
     </div>
