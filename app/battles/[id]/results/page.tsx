@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BrowseHeader } from "@/components/layout/BrowseHeader";
+import { CommentsSection } from "@/components/comments/CommentsSection";
 import { getBeatmakerRecord, getGlobalRankings } from "@/lib/battles";
 import { prisma } from "@/lib/prisma";
+import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = { title: "Results — AUXDROP" };
 
@@ -32,6 +34,11 @@ export default async function ResultsPage({
     include: { user: true },
   });
 
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
     <div className="min-h-screen bg-canvas">
       <div className="mx-auto flex min-h-screen max-w-[1440px] flex-col border-x border-border bg-primary">
@@ -54,7 +61,20 @@ export default async function ResultsPage({
             </Link>
           </div>
         ) : (
-          <ResultsBody battleTitle={battle.title} winnerId={winnerResult.userId} winnerHandle={winnerResult.user.handle} />
+          <>
+            <ResultsBody
+              battleTitle={battle.title}
+              winnerId={winnerResult.userId}
+              winnerHandle={winnerResult.user.handle}
+            />
+            <div className="border-t border-border">
+              <CommentsSection
+                battleId={battle.id}
+                battleTitle={battle.title}
+                isAuthenticated={Boolean(user)}
+              />
+            </div>
+          </>
         )}
 
         <div className="border-t border-border px-8 py-7 font-sans text-xs text-faint sm:px-16">

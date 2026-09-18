@@ -3,6 +3,9 @@ import { notFound } from "next/navigation";
 import { BrowseHeader } from "@/components/layout/BrowseHeader";
 import { getBeatmakerRecord, getGlobalRankings } from "@/lib/battles";
 import { prisma } from "@/lib/prisma";
+import { createClient } from "@/lib/supabase/server";
+import { FollowButton } from "./FollowButton";
+import { MessageButton } from "./MessageButton";
 
 export async function generateMetadata({
   params,
@@ -25,6 +28,21 @@ export default async function BeatmakerProfilePage({
     include: { beatmakerProfile: true },
   });
   if (!user || !user.beatmakerProfile) notFound();
+
+  const supabase = await createClient();
+  const {
+    data: { user: viewer },
+  } = await supabase.auth.getUser();
+  const isOwnProfile = viewer?.id === user.id;
+  const isFollowing = viewer
+    ? Boolean(
+        await prisma.follow.findUnique({
+          where: {
+            followerId_followingId: { followerId: viewer.id, followingId: user.id },
+          },
+        }),
+      )
+    : false;
 
   const [record, rankings] = await Promise.all([
     getBeatmakerRecord(user.id),
@@ -61,6 +79,12 @@ export default async function BeatmakerProfilePage({
                 <p className="mt-2 max-w-lg font-sans text-sm text-muted">
                   {user.beatmakerProfile.bio}
                 </p>
+              )}
+              {viewer && !isOwnProfile && (
+                <div className="mt-4 flex gap-3">
+                  <FollowButton targetUserId={user.id} initiallyFollowing={isFollowing} />
+                  <MessageButton targetUserId={user.id} />
+                </div>
               )}
             </div>
           </div>

@@ -44,6 +44,13 @@ model User {
   judgments        Judgment[]
   judgeAssignments BattleJudge[]
   battleResults    BattleResult[]
+
+  following     Follow[]                  @relation("Following")
+  followers     Follow[]                  @relation("Followers")
+  notifications Notification[]
+  conversations ConversationParticipant[]
+  messages      Message[]
+  comments      Comment[]
 }
 
 model BeatmakerProfile {
@@ -93,6 +100,7 @@ model Battle {
   judgments   Judgment[]
   judges      BattleJudge[]
   results     BattleResult[]
+  comments    Comment[]
 }
 
 enum SubmissionStatus {
@@ -135,6 +143,7 @@ model Track {
   createdAt     DateTime @default(now())
 
   submission Submission?
+  comments   Comment[]
 }
 
 // One participant's outcome in a Battle, aggregated from that battle's
@@ -193,4 +202,93 @@ model BattleJudge {
   createdAt DateTime @default(now())
 
   @@unique([battleId, userId])
+}
+
+// --- Social/retention layer (build-order step 5) ---------------------------
+
+model Follow {
+  id          String @id @default(uuid()) @db.Uuid
+  followerId  String @db.Uuid
+  follower    User   @relation("Following", fields: [followerId], references: [id], onDelete: Cascade)
+  followingId String @db.Uuid
+  following   User   @relation("Followers", fields: [followingId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([followerId, followingId])
+}
+
+// Activity Feed has no table of its own — it's computed by querying
+// BattleResult + Follow at read time (see lib/activity.ts), same reasoning
+// as BattleResult itself: nothing to keep in sync.
+
+enum NotificationType {
+  BATTLE_RESULT
+  NEW_FOLLOWER
+  SUBMISSION_STATUS
+}
+
+model Notification {
+  id      String           @id @default(uuid()) @db.Uuid
+  userId  String           @db.Uuid
+  user    User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type    NotificationType
+  payload Json?
+
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+}
+
+// A participants join table rather than fixed userAId/userBId columns, so
+// group conversations (sponsors, judges) don't need a redesign later.
+model Conversation {
+  id        String   @id @default(uuid()) @db.Uuid
+  createdAt DateTime @default(now())
+
+  participants ConversationParticipant[]
+  messages     Message[]
+}
+
+model ConversationParticipant {
+  id             String       @id @default(uuid()) @db.Uuid
+  conversationId String       @db.Uuid
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  userId         String       @db.Uuid
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([conversationId, userId])
+}
+
+model Message {
+  id             String       @id @default(uuid()) @db.Uuid
+  conversationId String       @db.Uuid
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String       @db.Uuid
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  body      String
+  createdAt DateTime @default(now())
+}
+
+// Attachable to a Battle or Track — exactly one of battleId/trackId should
+// be set (Prisma/Postgres can't enforce that at the schema level, so it's
+// validated in application code). No releaseId yet — Release isn't modeled.
+model Comment {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  body   String
+
+  battleId String? @db.Uuid
+  battle   Battle? @relation(fields: [battleId], references: [id], onDelete: Cascade)
+  trackId  String? @db.Uuid
+  track    Track?  @relation(fields: [trackId], references: [id], onDelete: Cascade)
+
+  parentId String?   @db.Uuid
+  parent   Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies  Comment[] @relation("CommentReplies")
+
+  createdAt DateTime @default(now())
 }
