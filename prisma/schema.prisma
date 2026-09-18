@@ -39,9 +39,11 @@ model User {
   updatedAt DateTime @updatedAt
 
   beatmakerProfile BeatmakerProfile?
+  tracks           Track[]
   submissions      Submission[]
   judgments        Judgment[]
   judgeAssignments BattleJudge[]
+  battleResults    BattleResult[]
 }
 
 model BeatmakerProfile {
@@ -55,11 +57,7 @@ model BeatmakerProfile {
   updatedAt DateTime @updatedAt
 }
 
-// --- Judging groundwork (build-order step 2 schema; UI is step 4) ----------
-//
-// `Battle` and `Submission` below are placeholders — just enough to give
-// `Judgment` a real relation target. Their full fields (entry fee, prize
-// pool, timing, submission state machine, etc.) are designed at step 4.
+// --- Battle loop core (build-order step 4) ----------------------------------
 
 enum JudgingType {
   COMMUNITY
@@ -67,26 +65,96 @@ enum JudgingType {
   HYBRID
 }
 
+enum BattleStatus {
+  UPCOMING
+  OPEN
+  PENDING
+  COMPLETED
+  ERROR
+}
+
 model Battle {
-  id          String      @id @default(uuid()) @db.Uuid
-  title       String
+  id        String       @id @default(uuid()) @db.Uuid
+  title     String
+  genre     String?
+  status    BattleStatus @default(UPCOMING)
+  entryFee  Decimal      @default(25) @db.Decimal(10, 2)
+  prizePool Decimal?     @db.Decimal(10, 2)
+
+  startsAt           DateTime
+  durationMinutes    Int      @default(60)
+  submissionDeadline DateTime
+
   judgingType JudgingType @default(COMMUNITY)
   createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 
   submissions Submission[]
   judgments   Judgment[]
   judges      BattleJudge[]
+  results     BattleResult[]
+}
+
+enum SubmissionStatus {
+  PENDING_REVIEW
+  ACCEPTED
+  FLAGGED
+  DISQUALIFIED
 }
 
 model Submission {
-  id        String   @id @default(uuid()) @db.Uuid
-  battleId  String   @db.Uuid
-  battle    Battle   @relation(fields: [battleId], references: [id], onDelete: Cascade)
-  userId    String   @db.Uuid
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
+  id       String @id @default(uuid()) @db.Uuid
+  battleId String @db.Uuid
+  battle   Battle @relation(fields: [battleId], references: [id], onDelete: Cascade)
+  userId   String @db.Uuid
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  trackId String @unique @db.Uuid
+  track   Track  @relation(fields: [trackId], references: [id], onDelete: Cascade)
+
+  status      SubmissionStatus @default(PENDING_REVIEW)
+  submittedAt DateTime         @default(now())
 
   judgments Judgment[]
+  result    BattleResult?
+
+  @@unique([battleId, userId])
+}
+
+// The actual audio asset. Licensing/commercial fields (Non-Exclusive/
+// Exclusive/Stems, DSP-released, etc.) are deferred to Phase 2 (step 7) —
+// this only covers what a battle submission needs: a playable track.
+model Track {
+  id            String   @id @default(uuid()) @db.Uuid
+  title         String
+  audioUrl      String
+  waveformPeaks Json?
+  durationSec   Int
+  creatorId     String   @db.Uuid
+  creator       User     @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+
+  submission Submission?
+}
+
+// One participant's outcome in a Battle, aggregated from that battle's
+// Judgment rows per its judgingType. Global/genre rank and win-loss record
+// (Charts, Beatmaker Profile) are computed by querying BattleResult rather
+// than stored as counters on BeatmakerProfile, so there's nothing to fall
+// out of sync.
+model BattleResult {
+  id           String     @id @default(uuid()) @db.Uuid
+  battleId     String     @db.Uuid
+  battle       Battle     @relation(fields: [battleId], references: [id], onDelete: Cascade)
+  userId       String     @db.Uuid
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  submissionId String     @unique @db.Uuid
+  submission   Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  placement Int?
+  score     Float?
+  advanced  Boolean  @default(false)
+  createdAt DateTime @default(now())
 
   @@unique([battleId, userId])
 }
