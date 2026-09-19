@@ -150,6 +150,27 @@ nothing was designed toward one speculatively.
   nav item both now link to `/tv` (previously inert/absent, since `/tv`
   didn't exist).
 
+### CMS
+Content management (`CMS.dc.html`). Built 2026-09-19, but only for content
+that didn't already exist as a page — the mockup's fixture list also
+included Home page hero/About page/How It Works steps, which are real,
+already-shipped pages with hardcoded copy; retrofitting those onto a CMS
+is a separate, riskier task, deliberately not done here.
+
+- `ContentBlock`: one flexible table (`type` discriminator:
+  `STATIC_PAGE | FAQ_ENTRY | PRESS_RELEASE`) rather than three near-identical
+  tables — `slug` is only meaningful for `STATIC_PAGE` (unique per type),
+  `position` is manual ordering used by `FAQ_ENTRY` only, `publishedAt`
+  null means draft (not shown publicly).
+- `/faq`, `/press` (public, list published entries), `/terms`, `/privacy`
+  (public, one `STATIC_PAGE` row each by slug) are all new pages — none
+  existed before. Privacy Policy was added alongside Terms of Service even
+  though the mockup's fixture only listed Terms — `MarketingFooter` already
+  had both links sitting inert, and the mockup's omission looked like
+  incomplete fixture data, not a deliberate exclusion.
+- `/admin/cms` (list, grouped by type) and `/admin/cms/:id` (edit/publish/
+  delete) manage all three types through one UI.
+
 ### Release
 A commercial output — season compilation album (`releases` data loop;
 `Releases.dc.html`, `Release Management.dc.html`). Built 2026-09-19.

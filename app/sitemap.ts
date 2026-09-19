@@ -23,6 +23,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/sponsors`, changeFrequency: "monthly", priority: 0.3 },
     { url: `${BASE_URL}/industry`, changeFrequency: "monthly", priority: 0.3 },
     { url: `${BASE_URL}/tv`, changeFrequency: "monthly", priority: 0.3 },
+    { url: `${BASE_URL}/faq`, changeFrequency: "monthly", priority: 0.4 },
+    { url: `${BASE_URL}/press`, changeFrequency: "weekly", priority: 0.4 },
+    { url: `${BASE_URL}/terms`, changeFrequency: "yearly", priority: 0.2 },
+    { url: `${BASE_URL}/privacy`, changeFrequency: "yearly", priority: 0.2 },
   ];
 
   const [battles, beatmakerProfiles, tracks] = await Promise.all([

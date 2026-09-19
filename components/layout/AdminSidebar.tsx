@@ -20,7 +20,7 @@ const NAV: NavItem[] = [
   { label: "Shop Moderation" },
   { label: "Release Management", href: "/admin/releases" },
   { label: "Royalty Management" },
-  { label: "CMS" },
+  { label: "CMS", href: "/admin/cms" },
   { label: "Financial Reporting" },
   { label: "Dispute Resolution", href: "/admin/disputes" },
 ];

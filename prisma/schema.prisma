@@ -598,3 +598,33 @@ model TvWaitlistEntry {
   user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   createdAt DateTime @default(now())
 }
+
+// --- CMS (non-commerce catch-up work) --------------------------------------
+//
+// Only covers content that doesn't exist as a page yet (FAQ, Press
+// releases, Terms of Service, Privacy Policy) — deliberately not retrofitting
+// Home/About/How It Works, which are real, already-shipped pages with
+// hardcoded copy; moving those onto this would be a separate, riskier task.
+
+enum ContentBlockType {
+  STATIC_PAGE // one row = one full static page (Terms of Service, Privacy Policy)
+  FAQ_ENTRY // one row = one Q&A pair
+  PRESS_RELEASE // one row = one announcement
+}
+
+model ContentBlock {
+  id   String           @id @default(uuid()) @db.Uuid
+  type ContentBlockType
+
+  slug  String? // only meaningful for STATIC_PAGE, e.g. "terms-of-service"
+  title String
+  body  String // plain text/markdown
+
+  position    Int? // manual ordering, used by FAQ_ENTRY
+  publishedAt DateTime? // null = draft, not shown publicly
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([type, slug])
+}

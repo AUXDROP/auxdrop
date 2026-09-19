@@ -17,8 +17,12 @@ export function MarketingFooter({
         </Link>
       ) : (
         <div className="flex gap-5 font-sans text-xs text-faint">
-          <span>Terms</span>
-          <span>Privacy</span>
+          <Link href="/terms" className="hover:text-muted">
+            Terms
+          </Link>
+          <Link href="/privacy" className="hover:text-muted">
+            Privacy
+          </Link>
         </div>
       )}
     </div>
