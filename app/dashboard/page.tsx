@@ -51,7 +51,7 @@ export default async function DashboardPage() {
   return (
     <div className="min-h-screen bg-canvas">
       <div className="mx-auto flex min-h-screen max-w-[1440px] flex-col border-x border-border bg-primary">
-        <AppHeader />
+        <AppHeader isAdmin={dbUser.isAdmin} />
 
         <div className="px-8 pt-14 sm:px-16">
           <h1 className="mb-8 font-display text-3xl font-extrabold text-on-dark">

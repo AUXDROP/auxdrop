@@ -5,7 +5,7 @@ import { signOut } from "@/app/auth/actions";
 // Wallet and Analytics aren't built yet (Phase 2 / not yet scheduled) —
 // rendered inert like the marketing header's not-yet-built nav items.
 // Activity/Messages/Following/Notifications are real as of step 5.
-export function AppHeader() {
+export function AppHeader({ isAdmin }: { isAdmin?: boolean }) {
   return (
     <header className="flex items-center justify-between border-b border-border px-8 py-5 sm:px-16">
       <Wordmark size="small" href="/dashboard" />
@@ -48,6 +48,14 @@ export function AppHeader() {
         </Link>
       </nav>
       <div className="flex items-center gap-5">
+        {isAdmin && (
+          <Link
+            href="/admin"
+            className="font-sans text-sm font-semibold text-accent hover:text-on-dark"
+          >
+            Admin
+          </Link>
+        )}
         <Link
           href="/notifications"
           className="font-sans text-sm font-semibold text-muted hover:text-on-dark"

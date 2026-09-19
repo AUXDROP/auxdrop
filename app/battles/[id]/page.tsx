@@ -9,6 +9,7 @@ import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 import { UserRole, BattleStatus } from "@/generated/prisma/client";
 import { SubmissionForm } from "./SubmissionForm";
+import { DisputeForm } from "./DisputeForm";
 
 // Evergreen marketing copy, not per-battle data.
 const OUTCOMES = [
@@ -101,6 +102,12 @@ export default async function BattleDetailPage({
                   ))}
                 </div>
               </div>
+
+              {user && (
+                <div>
+                  <DisputeForm battleId={battle.id} />
+                </div>
+              )}
             </div>
 
             <Card className="flex h-fit flex-col gap-5 p-7">

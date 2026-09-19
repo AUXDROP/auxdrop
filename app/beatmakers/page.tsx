@@ -9,6 +9,11 @@ export const metadata: Metadata = {
   description: "Browse Beatmaker profiles on AUXDROP.",
 };
 
+// Without this, Next statically prerenders the profile list at build time
+// (no auth/cookies here to make it dynamic automatically), freezing it until
+// the next deploy instead of reflecting newly-created profiles.
+export const dynamic = "force-dynamic";
+
 export default async function BeatmakersPage() {
   const profiles = await prisma.beatmakerProfile.findMany({
     include: { user: { select: { handle: true } } },

@@ -38,6 +38,11 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // Staff permission, orthogonal to `role` — an admin can also be a
+  // BEATMAKER. No signup UI grants this; set only via direct DB access
+  // (see docs/04-data-model.md's step 6 resolved decision).
+  isAdmin Boolean @default(false)
+
   beatmakerProfile BeatmakerProfile?
   tracks           Track[]
   submissions      Submission[]
@@ -51,6 +56,7 @@ model User {
   conversations ConversationParticipant[]
   messages      Message[]
   comments      Comment[]
+  disputesFiled Dispute[]
 }
 
 model BeatmakerProfile {
@@ -101,6 +107,7 @@ model Battle {
   judges      BattleJudge[]
   results     BattleResult[]
   comments    Comment[]
+  disputes    Dispute[]
 }
 
 enum SubmissionStatus {
@@ -125,6 +132,7 @@ model Submission {
 
   judgments Judgment[]
   result    BattleResult?
+  disputes  Dispute[]
 
   @@unique([battleId, userId])
 }
@@ -291,4 +299,33 @@ model Comment {
   replies  Comment[] @relation("CommentReplies")
 
   createdAt DateTime @default(now())
+}
+
+// --- Admin (build-order step 6) ---------------------------------------------
+
+enum DisputeStatus {
+  OPEN
+  RESOLVED
+  DISMISSED
+}
+
+// Filed against a Battle or a Submission — at most one of battleId/
+// submissionId is expected to be set (validated in application code, same
+// as Comment's battleId/trackId).
+model Dispute {
+  id        String @id @default(uuid()) @db.Uuid
+  filedById String @db.Uuid
+  filedBy   User   @relation(fields: [filedById], references: [id], onDelete: Cascade)
+
+  battleId     String?     @db.Uuid
+  battle       Battle?     @relation(fields: [battleId], references: [id], onDelete: Cascade)
+  submissionId String?     @db.Uuid
+  submission   Submission? @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  reason     String
+  status     DisputeStatus @default(OPEN)
+  resolution String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

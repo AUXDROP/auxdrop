@@ -74,3 +74,31 @@ export async function submitTrack(
 
   redirect(`/battles/${battleId}`);
 }
+
+export interface FileDisputeState {
+  error?: string;
+  success?: boolean;
+}
+
+export async function fileDispute(
+  battleId: string,
+  _prevState: FileDisputeState,
+  formData: FormData,
+): Promise<FileDisputeState> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const reason = String(formData.get("reason") || "").trim();
+  if (!reason) {
+    return { error: "Tell us what's wrong before submitting." };
+  }
+
+  await prisma.dispute.create({
+    data: { battleId, filedById: user.id, reason },
+  });
+
+  return { success: true };
+}
