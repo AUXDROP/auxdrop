@@ -35,6 +35,7 @@ export default async function DashboardPage() {
     include: { beatmakerProfile: true },
   });
   if (!dbUser) redirect("/login");
+  if (dbUser.role === UserRole.SPONSOR) redirect("/sponsor");
 
   const isBeatmaker = dbUser.role === UserRole.BEATMAKER;
   const profileIncomplete = isBeatmaker && !dbUser.beatmakerProfile?.bio;

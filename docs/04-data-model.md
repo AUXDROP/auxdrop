@@ -195,14 +195,32 @@ Judging/content dispute (`disputes`, `flagged` data loops; `Dispute Resolution.d
 - id, related battle_id/submission_id, filed_by, reason, status, resolution
 
 ### Sponsor
-Brand sponsoring challenges (`packages` data loop; `Sponsor Portal.dc.html`).
-Phase 3. Sponsor accounts are **staff-onboarded** (sales-driven deals, per
-the business plan), not self-serve signup — created via an admin tool or
-seed script once Sponsor Portal is built, using the reserved `User.role =
-SPONSOR`. `SponsorProfile` (this entity, 1:1 with `User`) isn't designed
-yet; built alongside Sponsor Portal in Phase 3.
+Brand sponsoring challenges. Built 2026-09-19, pulled forward from Phase 3
+(no dependency on Commerce/Industry — only needed `Battle`, same reasoning
+as Tournaments). Sponsor accounts are **staff-onboarded**, not self-serve —
+`/admin/sponsors` creates the Supabase Auth user directly (via
+`lib/supabase/admin.ts`'s `inviteUserByEmail`) plus the matching
+`User` (role `SPONSOR`) and `SponsorProfile` rows in one action; the
+sponsor sets their own password via the emailed invite link.
 
-- id, company_name, sponsorship packages purchased, sponsored battle_ids
+- `SponsorProfile`: 1:1 with `User`, same pattern as `BeatmakerProfile` —
+  companyName, contactName, contactEmail, internal admin notes.
+- `Sponsorship`: the actual signed engagement (not the generic pricing
+  catalog on the public `/sponsors` pitch page) — packageName (free text,
+  matching `Battle.genre`/`Release.season`'s precedent, not an enum),
+  amountContributed, productNotes (non-cash contributions, e.g. plugin/
+  hardware prizes), startDate/endDate. One sponsor has many sponsorships
+  over time; one sponsorship covers many `Battle`s.
+- `Battle.sponsorshipId` (nullable): a real new column, unlike the
+  Tournament work's relation-only additions — a sponsorship covering many
+  battles couldn't be represented relation-only. Confirmed via the
+  generated migration diff that this is the only column added to `Battle`.
+- `/sponsor` (the sponsor's own logged-in view) is intentionally minimal
+  and read-only — the mockup (`Sponsor Portal.dc.html`) turned out to
+  actually be a logged-out marketing pitch page (now `/sponsors`), not a
+  dashboard, so there was no mockup to match for this view. No performance
+  metrics shown — no view/play tracking exists anywhere yet (same gap
+  noted on `/analytics`).
 
 ### IndustryContact
 A&R/sync/label industry account (`Industry Portal.dc.html`, `catalog` /

@@ -44,6 +44,7 @@ model User {
   isAdmin Boolean @default(false)
 
   beatmakerProfile BeatmakerProfile?
+  sponsorProfile   SponsorProfile?
   tracks           Track[]
   submissions      Submission[]
   judgments        Judgment[]
@@ -118,6 +119,12 @@ model Battle {
   judgingType JudgingType @default(COMMUNITY)
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
+
+  // Nullable — most Battles aren't sponsored. A real column (unlike
+  // roundMatch below): one sponsorship can cover many Battles, so this
+  // can't be relation-only the way the Tournament back-reference is.
+  sponsorshipId String?      @db.Uuid
+  sponsorship   Sponsorship? @relation(fields: [sponsorshipId], references: [id], onDelete: SetNull)
 
   submissions Submission[]
   judgments   Judgment[]
@@ -496,4 +503,53 @@ model RoundMatch {
   createdAt DateTime @default(now())
 
   @@unique([roundId, position])
+}
+
+// --- Sponsor Portal (pulled forward from Phase 3, non-commerce catch-up
+// work) ----------------------------------------------------------------
+//
+// Sponsor accounts are staff-onboarded, not self-serve (see docs/04-data-
+// model.md's resolved decision on question 1) — there's no signup path for
+// UserRole.SPONSOR. Staff creates the Supabase Auth user directly (via
+// lib/supabase/admin.ts) and the matching User/SponsorProfile rows in the
+// same action, then the sponsor sets their own password via an emailed
+// invite link, same infra the rest of auth already uses.
+
+model SponsorProfile {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @unique @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  companyName  String
+  contactName  String?
+  contactEmail String?
+  notes        String? // internal admin notes — never shown to the sponsor
+
+  sponsorships Sponsorship[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// One signed engagement — the package a sponsor actually bought, not the
+// generic pricing catalog on the public /sponsors pitch page. Covers zero
+// or more Battles.
+model Sponsorship {
+  id        String         @id @default(uuid()) @db.Uuid
+  sponsorId String         @db.Uuid
+  sponsor   SponsorProfile @relation(fields: [sponsorId], references: [id], onDelete: Cascade)
+
+  // Free text, e.g. "Season Partner" — matches Battle.genre/Release.season's
+  // precedent rather than a rigid enum tied to the pitch page's 3 examples.
+  packageName       String?
+  amountContributed Decimal?  @db.Decimal(10, 2)
+  // Non-cash contributions, e.g. "3 plugin licenses + 1 controller for prizes".
+  productNotes      String?
+  startDate         DateTime?
+  endDate           DateTime?
+
+  battles Battle[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
