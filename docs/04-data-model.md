@@ -223,11 +223,30 @@ sponsor sets their own password via the emailed invite link.
   noted on `/analytics`).
 
 ### IndustryContact
-A&R/sync/label industry account (`Industry Portal.dc.html`, `catalog` /
-`pathways` loops) — access to the sync catalog and talent discovery.
-Phase 3. Same staff-onboarded pattern as Sponsor (curated introductions, not
-public signup) — reserved `User.role = INDUSTRY`, `IndustryProfile` not
-designed yet.
+A&R/sync/label industry account. Built 2026-09-19, pulled forward from
+Phase 3 (same reasoning as Tournaments/Sponsor — no dependency on
+Commerce). Same staff-onboarded pattern as Sponsor: `/admin/industry`
+creates the Supabase Auth user + `User` (role `INDUSTRY`) + `IndustryProfile`
+together; the contact sets their password via an emailed invite.
+
+- `IndustryProfile`: 1:1 with `User`, same shape as `SponsorProfile` —
+  companyName, contactName, contactEmail, contactType (free text — "Label",
+  "A&R", "Music Supervisor", "Game Studio", "Brand" — not an enum), internal
+  notes.
+- **No `Sponsorship`-equivalent engagement table** — unlike a sponsor deal,
+  Industry access has no concrete $ amount/package/dates to track; the
+  business overview frames it as curated intros gated by performance, not
+  a purchased package.
+- `/industry-portal` (the contact's own logged-in view) is intentionally
+  minimal: profile info + a real link into the already-public
+  `/beatmakers` directory. The actual differentiator — a sync/licensing
+  catalog — needs `Track` licensing fields and a `License` model, both
+  still deferred to step 7/commerce; nothing here fakes that.
+- `/industry` (public pitch page) deviates from the mockup on two points,
+  both approved explicitly: a real Beatmaker-profile count replaces the
+  mockup's now-stale "No Beatmaker profiles yet," and a "Request access"
+  mailto replaces the mockup's signup link, since there's no self-serve
+  path to the `INDUSTRY` role.
 
 ### Notification
 `notifications` data loop; `Notifications.dc.html`.

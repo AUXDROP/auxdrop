@@ -45,6 +45,7 @@ model User {
 
   beatmakerProfile BeatmakerProfile?
   sponsorProfile   SponsorProfile?
+  industryProfile  IndustryProfile?
   tracks           Track[]
   submissions      Submission[]
   judgments        Judgment[]
@@ -549,6 +550,33 @@ model Sponsorship {
   endDate           DateTime?
 
   battles Battle[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// --- Industry Portal (pulled forward from Phase 3, same staff-onboarded
+// pattern as Sponsor Portal) -------------------------------------------
+//
+// No Sponsorship-equivalent engagement table — unlike a sponsor deal,
+// Industry access has no concrete $ amount/package/dates to track (per
+// docs/01-business-overview.md it's framed as curated intros gated by
+// performance, not a purchased package). The real differentiator — a
+// sync/licensing catalog — needs Track licensing fields and a License
+// model, both deferred to step 7/commerce; nothing here fakes that.
+
+model IndustryProfile {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @unique @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  companyName String
+  contactName String?
+  contactEmail String?
+  // Free text, e.g. "Label", "A&R", "Music Supervisor", "Game Studio",
+  // "Brand" — matches Sponsorship.packageName's precedent, not an enum.
+  contactType  String?
+  notes        String? // internal admin notes — never shown to the contact
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

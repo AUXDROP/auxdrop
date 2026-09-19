@@ -17,9 +17,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/battles`, changeFrequency: "daily", priority: 0.8 },
     { url: `${BASE_URL}/beatmakers`, changeFrequency: "daily", priority: 0.7 },
     { url: `${BASE_URL}/rankings`, changeFrequency: "daily", priority: 0.7 },
+    { url: `${BASE_URL}/hall-of-fame`, changeFrequency: "daily", priority: 0.7 },
     { url: `${BASE_URL}/releases`, changeFrequency: "weekly", priority: 0.6 },
     { url: `${BASE_URL}/championship`, changeFrequency: "weekly", priority: 0.6 },
     { url: `${BASE_URL}/sponsors`, changeFrequency: "monthly", priority: 0.3 },
+    { url: `${BASE_URL}/industry`, changeFrequency: "monthly", priority: 0.3 },
   ];
 
   const [battles, beatmakerProfiles, tracks] = await Promise.all([

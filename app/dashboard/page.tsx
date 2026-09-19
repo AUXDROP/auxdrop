@@ -36,6 +36,7 @@ export default async function DashboardPage() {
   });
   if (!dbUser) redirect("/login");
   if (dbUser.role === UserRole.SPONSOR) redirect("/sponsor");
+  if (dbUser.role === UserRole.INDUSTRY) redirect("/industry-portal");
 
   const isBeatmaker = dbUser.role === UserRole.BEATMAKER;
   const profileIncomplete = isBeatmaker && !dbUser.beatmakerProfile?.bio;
