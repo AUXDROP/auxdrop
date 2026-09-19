@@ -5,47 +5,47 @@ import { Card, CardBody } from "@/components/ui";
 import { getGlobalRankings } from "@/lib/battles";
 
 export const metadata: Metadata = {
-  title: "Beatmaker Rankings — AUXDROP",
-  description: "Global Beatmaker rankings — wins, losses, and standing across every Beat Battle.",
+  title: "Hall of Fame — AUXDROP",
+  description: "AUXDROP's top Beatmakers, ranked by career wins.",
 };
 
-// Without this, Next statically prerenders the rankings at build time (no
-// auth/cookies here to make it dynamic automatically), freezing the ladder
-// until the next deploy instead of reflecting new results. Same bug class
-// as /beatmakers, fixed the same way.
+// The mockup (design/mockups/pages/Hall of Fame.dc.html) only designs the
+// empty state — its copy is reused verbatim below — with no populated-state
+// layout to match. There's also no Season entity yet (see
+// docs/04-data-model.md's Tournament/Championship note), so "induction"
+// here means all-time wins, not a per-season honor. Revisit once seasons
+// are modeled.
+//
+// Without the line below, Next statically prerenders this at build time (no
+// auth/cookies here to make it dynamic automatically) — same bug class as
+// /beatmakers and /rankings.
 export const dynamic = "force-dynamic";
 
-export default async function ChartsPage() {
-  const rankings = await getGlobalRankings();
+export default async function HallOfFamePage() {
+  const rankings = await getGlobalRankings(25);
+  const champions = rankings.filter((r) => r.wins > 0);
 
   return (
     <div className="min-h-screen bg-canvas">
       <div className="mx-auto flex min-h-screen max-w-[1440px] flex-col border-x border-border bg-primary">
         <BrowseHeader
-          navItems={[
-            { label: "Charts", href: "/rankings" },
-            { label: "Championship" },
-            { label: "Hall of Fame", href: "/hall-of-fame" },
-          ]}
-          active="Charts"
+          navItems={[{ label: "Championship" }, { label: "Hall of Fame", href: "/hall-of-fame" }]}
+          active="Hall of Fame"
         />
 
         <div className="flex flex-1 flex-col gap-6 px-8 py-16 sm:px-16">
-          <div>
-            <h1 className="font-display text-4xl font-extrabold text-on-dark sm:text-5xl">
-              Beatmaker Rankings
-            </h1>
-          </div>
+          <h1 className="font-display text-4xl font-extrabold text-on-dark sm:text-5xl">
+            Hall of Fame
+          </h1>
 
-          {rankings.length === 0 ? (
+          {champions.length === 0 ? (
             <Card className="flex flex-col items-start gap-4 p-14">
-              <div className="max-w-xl font-display text-2xl font-bold text-on-dark">
-                See where every Beatmaker stands.
+              <div className="max-w-xl font-display text-xl font-bold text-on-dark">
+                Nobody&apos;s been inducted yet.
               </div>
               <CardBody className="mt-0 max-w-xl text-sm leading-relaxed">
-                Charts track wins, losses, and standing across every Beat
-                Battle. Sign up now so your record starts counting from the
-                first Battle.
+                The Hall of Fame recognizes AUXDROP&apos;s top Beatmakers.
+                Compete early and be the first name here.
               </CardBody>
               <Link
                 href="/signup"
@@ -56,20 +56,18 @@ export default async function ChartsPage() {
             </Card>
           ) : (
             <div className="flex flex-col divide-y divide-border border-y border-border">
-              {rankings.map((r, i) => (
+              {champions.map((c, i) => (
                 <Link
-                  key={r.userId}
-                  href={`/beatmakers/${r.handle}`}
+                  key={c.userId}
+                  href={`/beatmakers/${c.handle}`}
                   className="grid grid-cols-[48px_1fr_auto] items-center gap-4 px-2 py-4 hover:bg-elevated"
                 >
                   <div className="font-display text-lg font-extrabold text-faint">
                     #{i + 1}
                   </div>
-                  <div className="font-sans text-sm font-bold text-on-dark">
-                    {r.handle}
-                  </div>
+                  <div className="font-sans text-sm font-bold text-on-dark">{c.handle}</div>
                   <div className="font-sans text-sm text-muted">
-                    {r.wins}–{r.losses} · {r.winRate}%
+                    {c.wins} win{c.wins === 1 ? "" : "s"} · {c.wins}–{c.losses}
                   </div>
                 </Link>
               ))}

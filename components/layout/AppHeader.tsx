@@ -2,9 +2,9 @@ import Link from "next/link";
 import { Wordmark } from "./Wordmark";
 import { signOut } from "@/app/auth/actions";
 
-// Wallet and Analytics aren't built yet (Phase 2 / not yet scheduled) —
-// rendered inert like the marketing header's not-yet-built nav items.
-// Activity/Messages/Following/Notifications are real as of step 5.
+// Wallet isn't built yet (Phase 2, needs payment infra) — rendered inert
+// like the marketing header's not-yet-built nav items. Activity/Messages/
+// Following/Notifications/Analytics are real.
 export function AppHeader({ isAdmin }: { isAdmin?: boolean }) {
   return (
     <header className="flex items-center justify-between border-b border-border px-8 py-5 sm:px-16">
@@ -37,9 +37,12 @@ export function AppHeader({ isAdmin }: { isAdmin?: boolean }) {
         <span className="font-sans text-sm font-semibold text-faint" aria-disabled>
           Wallet
         </span>
-        <span className="font-sans text-sm font-semibold text-faint" aria-disabled>
+        <Link
+          href="/analytics"
+          className="font-sans text-sm font-semibold text-muted hover:text-on-dark"
+        >
           Analytics
-        </span>
+        </Link>
         <Link
           href="/settings"
           className="font-sans text-sm font-semibold text-muted hover:text-on-dark"
