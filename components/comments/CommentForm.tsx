@@ -2,10 +2,10 @@
 
 import { useActionState, useRef } from "react";
 import { Input } from "@/components/ui";
-import { addBattleComment, type AddCommentState } from "./actions";
+import { addComment, type AddCommentState, type CommentTarget } from "./actions";
 
-export function CommentForm({ battleId }: { battleId: string }) {
-  const boundAction = addBattleComment.bind(null, battleId);
+export function CommentForm(target: CommentTarget) {
+  const boundAction = addComment.bind(null, target);
   const [state, formAction, pending] = useActionState<AddCommentState, FormData>(
     boundAction,
     {},

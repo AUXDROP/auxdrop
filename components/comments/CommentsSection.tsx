@@ -1,22 +1,26 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { CommentForm } from "./CommentForm";
+import type { CommentTarget } from "./actions";
 
 // Embedded component (design/mockups/pages/Comments.dc.html), not a
 // standalone route — per docs/03-sitemap.md's routing notes. Schema
 // supports threaded replies via Comment.parentId, but only a flat list is
-// shown here; reply UI isn't built yet.
+// shown here; reply UI isn't built yet. Attachable to a Battle or a Track
+// (exactly one), matching Comment's own battleId/trackId exclusivity.
 export async function CommentsSection({
-  battleId,
-  battleTitle,
+  target,
+  subtitle,
   isAuthenticated,
 }: {
-  battleId: string;
-  battleTitle: string;
+  target: CommentTarget;
+  subtitle: string;
   isAuthenticated: boolean;
 }) {
   const comments = await prisma.comment.findMany({
-    where: { battleId, parentId: null },
+    where: target.battleId
+      ? { battleId: target.battleId, parentId: null }
+      : { trackId: target.trackId, parentId: null },
     include: { user: { select: { handle: true } } },
     orderBy: { createdAt: "desc" },
   });
@@ -27,9 +31,7 @@ export async function CommentsSection({
       <h2 className="mb-1 font-display text-2xl font-extrabold text-on-dark">
         Comments
       </h2>
-      <div className="mb-8 font-sans text-[13px] text-faint">
-        On: {battleTitle} results
-      </div>
+      <div className="mb-8 font-sans text-[13px] text-faint">On: {subtitle}</div>
 
       {comments.length === 0 ? (
         <div className="rounded-input border border-border bg-elevated p-10 text-center">
@@ -49,7 +51,7 @@ export async function CommentsSection({
       )}
 
       {isAuthenticated ? (
-        <CommentForm battleId={battleId} />
+        <CommentForm {...target} />
       ) : (
         <p className="mt-8 font-sans text-[13px] text-faint">
           <Link href="/login" className="font-bold text-on-dark">

@@ -9,8 +9,14 @@ export interface AddCommentState {
   error?: string;
 }
 
-export async function addBattleComment(
-  battleId: string,
+// Exactly one of battleId/trackId, mirroring Comment's own battleId/trackId
+// exclusivity (validated in application code, same as Dispute).
+export type CommentTarget =
+  | { battleId: string; trackId?: undefined }
+  | { trackId: string; battleId?: undefined };
+
+export async function addComment(
+  target: CommentTarget,
   _prevState: AddCommentState,
   formData: FormData,
 ): Promise<AddCommentState> {
@@ -26,9 +32,13 @@ export async function addBattleComment(
   }
 
   await prisma.comment.create({
-    data: { battleId, userId: user.id, body },
+    data: { ...target, userId: user.id, body },
   });
 
-  revalidatePath(`/battles/${battleId}/results`);
+  if (target.battleId) {
+    revalidatePath(`/battles/${target.battleId}/results`);
+  } else {
+    revalidatePath(`/beats/${target.trackId}`);
+  }
   return {};
 }

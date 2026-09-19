@@ -3,7 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BrowseHeader } from "@/components/layout/BrowseHeader";
 import { AudioPlayerBar } from "@/components/audio";
+import { CommentsSection } from "@/components/comments/CommentsSection";
 import { prisma } from "@/lib/prisma";
+import { createClient } from "@/lib/supabase/server";
 
 export async function generateMetadata({
   params,
@@ -38,6 +40,11 @@ export default async function BeatDetailPage({
   const peaks = Array.isArray(track.waveformPeaks)
     ? (track.waveformPeaks as number[])
     : undefined;
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   return (
     <div className="min-h-screen bg-canvas">
@@ -74,6 +81,14 @@ export default async function BeatDetailPage({
             </div>
             <AudioPlayerBar src={track.audioUrl} peaks={peaks} title={track.title} />
           </div>
+        </div>
+
+        <div className="border-t border-border">
+          <CommentsSection
+            target={{ trackId: track.id }}
+            subtitle={track.title}
+            isAuthenticated={Boolean(user)}
+          />
         </div>
 
         <div className="border-t border-border px-8 py-7 font-sans text-xs text-faint sm:px-16">

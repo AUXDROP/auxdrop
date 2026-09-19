@@ -69,8 +69,8 @@ export default async function ResultsPage({
             />
             <div className="border-t border-border">
               <CommentsSection
-                battleId={battle.id}
-                battleTitle={battle.title}
+                target={{ battleId: battle.id }}
+                subtitle={`${battle.title} results`}
                 isAuthenticated={Boolean(user)}
               />
             </div>
