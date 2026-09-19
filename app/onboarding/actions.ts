@@ -25,6 +25,8 @@ export async function completeOnboarding(
 
   const handle = String(formData.get("handle") || "").trim();
   const bio = String(formData.get("bio") || "").trim();
+  const location = String(formData.get("location") || "").trim();
+  const genres = formData.getAll("genres").map(String);
 
   if (!HANDLE_PATTERN.test(handle)) {
     return {
@@ -45,8 +47,8 @@ export async function completeOnboarding(
   if (dbUser.role === UserRole.BEATMAKER) {
     await prisma.beatmakerProfile.upsert({
       where: { userId: user.id },
-      create: { userId: user.id, bio: bio || null },
-      update: { bio: bio || null },
+      create: { userId: user.id, bio: bio || null, location: location || null, genres },
+      update: { bio: bio || null, location: location || null, genres },
     });
   }
 

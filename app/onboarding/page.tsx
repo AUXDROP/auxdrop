@@ -47,6 +47,8 @@ export default async function OnboardingPage() {
       <OnboardingForm
         initialHandle={dbUser.handle}
         initialBio={dbUser.beatmakerProfile?.bio ?? ""}
+        initialLocation={dbUser.beatmakerProfile?.location ?? ""}
+        initialGenres={dbUser.beatmakerProfile?.genres ?? []}
         isBeatmaker={dbUser.role === UserRole.BEATMAKER}
       />
     </AuthShell>

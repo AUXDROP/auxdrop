@@ -14,3 +14,10 @@ export async function setUserAdmin(userId: string, isAdmin: boolean) {
   await prisma.user.update({ where: { id: userId }, data: { isAdmin } });
   revalidatePath("/admin/users");
 }
+
+export async function setBeatmakerVerified(userId: string, isVerified: boolean) {
+  await requireAdmin();
+  await prisma.beatmakerProfile.update({ where: { userId }, data: { isVerified } });
+  revalidatePath("/admin/users");
+  revalidatePath("/beatmakers");
+}

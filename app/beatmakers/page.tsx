@@ -3,6 +3,7 @@ import Link from "next/link";
 import { BrowseHeader } from "@/components/layout/BrowseHeader";
 import { Card, CardBody, CardTitle } from "@/components/ui";
 import { prisma } from "@/lib/prisma";
+import { GENRES } from "@/lib/genres";
 
 export const metadata: Metadata = {
   title: "Discover Beatmakers — AUXDROP",
@@ -14,8 +15,15 @@ export const metadata: Metadata = {
 // the next deploy instead of reflecting newly-created profiles.
 export const dynamic = "force-dynamic";
 
-export default async function BeatmakersPage() {
+export default async function BeatmakersPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ genre?: string }>;
+}) {
+  const { genre } = await searchParams;
+
   const profiles = await prisma.beatmakerProfile.findMany({
+    where: genre ? { genres: { has: genre } } : undefined,
     include: { user: { select: { handle: true } } },
     orderBy: { createdAt: "desc" },
   });
@@ -33,10 +41,40 @@ export default async function BeatmakersPage() {
             Discover Beatmakers
           </h1>
 
+          <div className="mb-8 flex flex-wrap gap-2">
+            <Link
+              href="/beatmakers"
+              className={
+                "rounded-pill border px-3.5 py-2 font-sans text-xs font-semibold " +
+                (!genre
+                  ? "border-signal bg-signal/[0.14] text-on-dark"
+                  : "border-border text-faint hover:text-muted")
+              }
+            >
+              All
+            </Link>
+            {GENRES.map((g) => (
+              <Link
+                key={g}
+                href={`/beatmakers?genre=${encodeURIComponent(g)}`}
+                className={
+                  "rounded-pill border px-3.5 py-2 font-sans text-xs font-semibold " +
+                  (genre === g
+                    ? "border-signal bg-signal/[0.14] text-on-dark"
+                    : "border-border text-faint hover:text-muted")
+                }
+              >
+                {g}
+              </Link>
+            ))}
+          </div>
+
           {profiles.length === 0 ? (
             <Card className="flex flex-col items-start gap-4 p-14">
               <div className="max-w-xl font-display text-xl font-bold text-on-dark">
-                Beatmaker profiles are just getting started.
+                {genre
+                  ? `No Beatmakers in ${genre} yet.`
+                  : "Beatmaker profiles are just getting started."}
               </div>
               <CardBody className="mt-0 max-w-xl text-sm leading-relaxed">
                 Build your profile now to be one of the first Beatmakers
@@ -54,10 +92,32 @@ export default async function BeatmakersPage() {
               {profiles.map((p) => (
                 <Link key={p.id} href={`/beatmakers/${p.user.handle}`}>
                   <Card className="h-full hover:border-accent">
-                    <CardTitle>{p.user.handle}</CardTitle>
+                    <div className="flex items-center gap-2">
+                      <CardTitle className="mb-0">{p.user.handle}</CardTitle>
+                      {p.isVerified && (
+                        <span className="rounded-pill bg-accent/12 px-2 py-0.5 text-[10px] font-bold text-accent">
+                          VERIFIED
+                        </span>
+                      )}
+                    </div>
+                    {p.location && (
+                      <div className="mt-1 font-sans text-xs text-faint">{p.location}</div>
+                    )}
                     <CardBody className="line-clamp-2">
                       {p.bio || "No bio yet."}
                     </CardBody>
+                    {p.genres.length > 0 && (
+                      <div className="mt-2 flex flex-wrap gap-1.5">
+                        {p.genres.map((g) => (
+                          <span
+                            key={g}
+                            className="rounded-pill border border-border px-2 py-1 font-sans text-[10px] font-semibold text-muted"
+                          >
+                            {g}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </Card>
                 </Link>
               ))}

@@ -64,7 +64,13 @@ model BeatmakerProfile {
   userId String @unique @db.Uuid
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  bio String?
+  bio      String?
+  location String?
+  genres   String[] @default([])
+
+  // Staff-set only — no self-serve UI, same pattern as User.isAdmin. Toggled
+  // from /admin/users.
+  isVerified Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

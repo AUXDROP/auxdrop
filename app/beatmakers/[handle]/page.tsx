@@ -72,13 +72,37 @@ export default async function BeatmakerProfilePage({
               }}
             />
             <div>
-              <h1 className="font-display text-4xl font-extrabold text-on-dark">
-                {user.handle}
-              </h1>
+              <div className="flex items-center gap-2.5">
+                <h1 className="font-display text-4xl font-extrabold text-on-dark">
+                  {user.handle}
+                </h1>
+                {user.beatmakerProfile.isVerified && (
+                  <span className="rounded-pill bg-accent/12 px-2.5 py-1 font-sans text-[10px] font-bold text-accent">
+                    VERIFIED
+                  </span>
+                )}
+              </div>
+              {user.beatmakerProfile.location && (
+                <p className="mt-1 font-sans text-xs text-faint">
+                  {user.beatmakerProfile.location}
+                </p>
+              )}
               {user.beatmakerProfile.bio && (
                 <p className="mt-2 max-w-lg font-sans text-sm text-muted">
                   {user.beatmakerProfile.bio}
                 </p>
+              )}
+              {user.beatmakerProfile.genres.length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {user.beatmakerProfile.genres.map((genre) => (
+                    <span
+                      key={genre}
+                      className="rounded-pill border border-border px-3 py-1.5 font-sans text-[11px] font-semibold text-muted"
+                    >
+                      {genre}
+                    </span>
+                  ))}
+                </div>
               )}
               {viewer && !isOwnProfile && (
                 <div className="mt-4 flex gap-3">

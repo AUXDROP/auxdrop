@@ -32,11 +32,16 @@ Public-facing profile for a beatmaker (`Beatmaker Profile.dc.html`).
   CONTRIBUTOR, SYNC ROSTER QUALIFIED, LICENSE AVAILABLE: NON-EXCLUSIVE /
   EXCLUSIVE / STEMS
 - follower/following relationships (`Following.dc.html`)
-- **Not yet modeled, found while building step 4**: verified-beatmaker status,
-  location, genre tags, commercial badges, and career earnings (needs
-  Wallet/Transaction, step 7). Beatmaker Profile (`/beatmakers/:handle`)
-  currently shows only handle, bio, and computed battle stats — these mockup
-  fields are omitted rather than faked.
+- `location` (free text), `genres` (`String[]`, plain strings — same
+  precedent as `Battle.genre` — not an enum, so the starter list in
+  `lib/genres.ts` can grow without a migration), `isVerified` (staff-set
+  only via `/admin/users`, no self-serve UI). Added 2026-09-19; captured in
+  the onboarding form (also used to edit an existing profile, not just at
+  signup) and shown on `/beatmakers/:handle` and the `/beatmakers` directory,
+  which also filters by genre.
+- **Still not modeled**: commercial badges (needs `Release`/`SoundKit`/
+  license entities — Phase 2/3) and career earnings (needs Wallet/
+  Transaction, step 7). Omitted rather than faked.
 
 ### Battle
 A single challenge instance (`battles` data loop; `Beat Battles.dc.html`,
