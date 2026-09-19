@@ -122,11 +122,21 @@ battle's `Judgment` rows, aggregated per `judging_type`.
 
 ### Release
 A commercial output — season compilation album (`releases` data loop;
-`Releases.dc.html`, `Release Management.dc.html`).
+`Releases.dc.html`, `Release Management.dc.html`). Built 2026-09-19.
 
-- id, title (e.g. "AUXDROP Vol. X"), season, tracklist (Track IDs)
-- DSP distribution status/links (Spotify/Apple Music/Tidal)
-- royalty_split config (references RoyaltySplit)
+- id, title (e.g. "AUXDROP Vol. X"), season (free-text label, currently just
+  baked into most titles), status (`DRAFT | SCHEDULED | LIVE`), releaseDate
+- DSP distribution links (Spotify/Apple Music/Tidal) — plain URLs an admin
+  pastes in once the release is actually live elsewhere; nothing here
+  submits to a DSP
+- tracklist via `ReleaseTrack` (ordered join table, a Track can appear on
+  more than one Release)
+- royalty_split config via `RoyaltySplit` — recorded config only, doesn't
+  move money (that's Wallet/Transaction, step 7); `userId` null means the
+  platform's share. No `SoundKit` reference — `SoundKit` isn't modeled yet.
+  Admin UI shows a running total but doesn't hard-enforce it summing to 100.
+- Public `/releases` lists `LIVE` releases only; `/admin/releases` manages
+  status, DSP links, tracklist, and royalty splits.
 
 ### SoundKit
 Winner co-branded kit (`Sound Kits.dc.html`).

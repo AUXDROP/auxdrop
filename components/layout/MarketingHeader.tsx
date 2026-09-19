@@ -11,7 +11,7 @@ const HOME_NAV: NavItem[] = [
   { label: "Charts", href: "/rankings" },
   { label: "Beatmakers", href: "/beatmakers" },
   { label: "Shop" },
-  { label: "Releases" },
+  { label: "Releases", href: "/releases" },
   { label: "TV" },
 ];
 
