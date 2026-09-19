@@ -77,14 +77,31 @@ export default async function BattleDetailPage({
                   </h1>
                   <BattleStatusBadge status={battle.status} />
                 </div>
-                <div className="flex gap-4 font-sans text-sm font-semibold text-muted">
+                <div className="flex flex-wrap gap-4 font-sans text-sm font-semibold text-muted">
                   <span>{battle.genre ?? "All genres"}</span>
                   <span className="text-border">|</span>
                   <span>{battle.durationMinutes} minutes</span>
+                  {battle.bpm && (
+                    <>
+                      <span className="text-border">|</span>
+                      <span>{battle.bpm} BPM</span>
+                    </>
+                  )}
                   <span className="text-border">|</span>
                   <span>{battle._count.submissions} entered</span>
                 </div>
               </div>
+
+              {battle.description && (
+                <div>
+                  <div className="mb-3.5 font-sans text-xs font-bold tracking-[0.1em] text-faint">
+                    CHALLENGE
+                  </div>
+                  <p className="whitespace-pre-line font-sans text-sm leading-relaxed text-muted">
+                    {battle.description}
+                  </p>
+                </div>
+              )}
 
               <div>
                 <div className="mb-3.5 font-sans text-xs font-bold tracking-[0.1em] text-faint">

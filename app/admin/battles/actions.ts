@@ -18,6 +18,9 @@ export async function createBattle(
 
   const title = String(formData.get("title") || "").trim();
   const genre = String(formData.get("genre") || "").trim();
+  const description = String(formData.get("description") || "").trim();
+  const bpmRaw = String(formData.get("bpm") || "").trim();
+  const bpm = bpmRaw ? Number(bpmRaw) : null;
   const entryFee = Number(formData.get("entryFee") || 25);
   const durationMinutes = Number(formData.get("durationMinutes") || 60);
   const startsAt = new Date(String(formData.get("startsAt") || ""));
@@ -35,11 +38,16 @@ export async function createBattle(
   if (judgingDeadlineRaw && isNaN(judgingDeadline!.getTime())) {
     return { error: "Voting deadline isn't a valid date." };
   }
+  if (bpmRaw && (bpm === null || isNaN(bpm) || bpm <= 0)) {
+    return { error: "BPM must be a positive number." };
+  }
 
   await prisma.battle.create({
     data: {
       title,
       genre: genre || null,
+      description: description || null,
+      bpm,
       entryFee,
       durationMinutes,
       startsAt,

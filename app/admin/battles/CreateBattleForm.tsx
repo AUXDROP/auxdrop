@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { Button, Input } from "@/components/ui";
+import { Button, Input, Textarea } from "@/components/ui";
 import { JudgingType } from "@/generated/prisma/enums";
 import { createBattle, type CreateBattleState } from "./actions";
 
@@ -34,6 +34,13 @@ export function CreateBattleForm() {
           type="number"
           defaultValue={60}
           placeholder="Duration (minutes)"
+        />
+        <Input name="bpm" type="number" placeholder="Target BPM (optional)" />
+        <Textarea
+          name="description"
+          placeholder="Challenge brief (optional) — shown on the battle page"
+          rows={3}
+          className="sm:col-span-2"
         />
         <label className="flex flex-col gap-1 font-sans text-xs text-faint">
           Starts at

@@ -60,10 +60,12 @@ A single challenge instance (`battles` data loop; `Beat Battles.dc.html`,
   when the voting UI was built (see "Community judging" below); optional,
   a battle without one is closed out manually by an admin.
 - sponsor_id (nullable, FK → Sponsor) — for sponsored challenges
-- **Not yet modeled, found while building step 4**: a longer challenge
-  brief/description text (Battle Detail's "CHALLENGE" paragraph — `title` is
-  only the short prompt) and BPM. Battle Detail currently omits both rather
-  than fake them.
+- `description` (plain text, the Battle Detail "CHALLENGE" paragraph —
+  `title` stays the short prompt) and `bpm` (nullable `Int`, informational
+  only — not enforced against a submitted track's actual tempo; there's no
+  BPM-detection in `lib/audio-client.ts`, that would be a separate audio
+  analysis feature). Both added 2026-09-19, editable from `CreateBattleForm`,
+  shown on `/battles/:id`.
 - Tournament/bracket play (`Championship.dc.html`) is **not** modeled on
   `Battle` — see the `Tournament` note under BattleResult below.
 
