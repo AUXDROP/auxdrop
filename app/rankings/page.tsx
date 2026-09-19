@@ -24,7 +24,7 @@ export default async function ChartsPage() {
         <BrowseHeader
           navItems={[
             { label: "Charts", href: "/rankings" },
-            { label: "Championship" },
+            { label: "Championship", href: "/championship" },
             { label: "Hall of Fame", href: "/hall-of-fame" },
           ]}
           active="Charts"

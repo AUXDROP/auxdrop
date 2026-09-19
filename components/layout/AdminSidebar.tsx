@@ -14,6 +14,7 @@ const NAV: NavItem[] = [
   { label: "Battle Management", href: "/admin/battles" },
   { label: "User Management", href: "/admin/users" },
   { label: "Submission Review", href: "/admin/submissions" },
+  { label: "Tournament Management", href: "/admin/tournaments" },
   { label: "Shop Moderation" },
   { label: "Release Management", href: "/admin/releases" },
   { label: "Royalty Management" },

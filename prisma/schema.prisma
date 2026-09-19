@@ -58,6 +58,11 @@ model User {
   comments      Comment[]
   disputesFiled Dispute[]
   royaltySplits RoyaltySplit[]
+
+  tournamentEntries       TournamentEntrant[]
+  roundMatchesAsUserA     RoundMatch[]        @relation("RoundMatchUserA")
+  roundMatchesAsUserB     RoundMatch[]        @relation("RoundMatchUserB")
+  roundMatchesAsByeWinner RoundMatch[]        @relation("RoundMatchByeWinner")
 }
 
 model BeatmakerProfile {
@@ -120,6 +125,10 @@ model Battle {
   results     BattleResult[]
   comments    Comment[]
   disputes    Dispute[]
+
+  // Relation-only — the FK lives on RoundMatch, no column added here. Null
+  // for every ordinary (non-tournament) Battle.
+  roundMatch RoundMatch?
 }
 
 enum SubmissionStatus {
@@ -392,4 +401,99 @@ model RoyaltySplit {
   user       User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   percentage Decimal  @db.Decimal(5, 2)
   createdAt  DateTime @default(now())
+}
+
+// --- Tournaments (non-commerce catch-up work) ------------------------------
+//
+// Composes ordinary, always-1-shot Battle rows into rounds/matchups —
+// Battle itself gets no bracket/round scalar fields (see docs/04-data-model.md's
+// resolved decision), only the relation-only Battle.roundMatch back-reference.
+// Round shells for every round are created up front (so the bracket shape is
+// visible immediately); a round's actual pairing + Battle rows are generated
+// only when that round starts — Round 1 at Tournament creation, later rounds
+// via an explicit admin "start next round" action once the prior round is
+// fully resolved. Season-based auto-qualification isn't built — entrants are
+// admin-seeded, since there's no Season entity yet.
+
+enum TournamentStatus {
+  UPCOMING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum RoundStatus {
+  PENDING // shell only — pairing/Battle not generated yet
+  ACTIVE // pairing generated, Battle(s) in progress (or all byes, already resolved)
+  COMPLETED
+  CANCELLED
+}
+
+model Tournament {
+  id        String           @id @default(uuid()) @db.Uuid
+  title     String
+  status    TournamentStatus @default(UPCOMING)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  entrants TournamentEntrant[]
+  rounds   Round[]
+}
+
+// The admin-chosen initial seed list — Round 1's participants, in seed order.
+model TournamentEntrant {
+  id           String     @id @default(uuid()) @db.Uuid
+  tournamentId String     @db.Uuid
+  tournament   Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  userId       String     @db.Uuid
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  seed         Int
+
+  @@unique([tournamentId, userId])
+  @@unique([tournamentId, seed])
+}
+
+model Round {
+  id           String      @id @default(uuid()) @db.Uuid
+  tournamentId String      @db.Uuid
+  tournament   Tournament  @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  roundNumber  Int
+  // "Quarterfinal" / "Semifinal" / "Final" / "Round N" — computed once at
+  // Tournament creation from the entrant count, not re-derived later.
+  label        String
+  status       RoundStatus @default(PENDING)
+
+  matches RoundMatch[]
+
+  @@unique([tournamentId, roundNumber])
+}
+
+// Exactly one of userA/userB may be null — a bye. battleId is set the
+// instant this match's real Battle is created; both happen together when
+// the round starts, so there's never a "placeholder Battle" state.
+model RoundMatch {
+  id       String @id @default(uuid()) @db.Uuid
+  roundId  String @db.Uuid
+  round    Round  @relation(fields: [roundId], references: [id], onDelete: Cascade)
+  // Bracket slot within the round, 1-indexed — determines pairing into the
+  // next round (positions 1&2 feed the next round's position 1, etc.).
+  position Int
+
+  userAId String? @db.Uuid
+  userA   User?   @relation("RoundMatchUserA", fields: [userAId], references: [id])
+  userBId String? @db.Uuid
+  userB   User?   @relation("RoundMatchUserB", fields: [userBId], references: [id])
+
+  // Bye only: exactly one of userA/userB set, no Battle ever created for
+  // this slot — the present user advances automatically. Left null (along
+  // with userA/userB) when this bracket slot has no entrant at all.
+  byeWinnerId String? @db.Uuid
+  byeWinner   User?   @relation("RoundMatchByeWinner", fields: [byeWinnerId], references: [id])
+
+  battleId String? @unique @db.Uuid
+  battle   Battle? @relation(fields: [battleId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@unique([roundId, position])
 }

@@ -114,11 +114,22 @@ battle's `Judgment` rows, aggregated per `judging_type`.
 
 - battle_id, user_id, placement, score/vote breakdown, advanced (bool)
 - Feeds into BeatmakerProfile's aggregate rank + win/loss record
-- **Tournament/Championship** (Phase 3 only): a separate `Tournament` entity
-  composes ordinary (always 1-shot) `Battle` rows into rounds/matchups.
-  `advanced` is what lets a participant's result in one round's `Battle`
-  qualify them for the next round's `Battle`. `Battle` itself never gets
-  bracket/round fields — deferred entirely until Phase 3.
+- **Tournament/Championship**: built 2026-09-19, ahead of its original Phase
+  3 placement (no dependency on Commerce/Sponsor/Industry — only needed the
+  existing Battle system). `Tournament` → `Round` (pre-created shells for
+  every round, so the bracket shape is visible immediately) → `RoundMatch`
+  (the actual pairing, generated only when a round starts — Round 1 at
+  Tournament creation from an admin-seeded `TournamentEntrant` list, later
+  rounds via an explicit admin action once the prior round fully resolves).
+  `RoundMatch` optionally owns one real `Battle` (both created together,
+  never a placeholder-Battle state); a bye is a `RoundMatch` with only one
+  of `userA`/`userB` set and no `Battle`. `advanced` is what lets a
+  participant's result in one round's `Battle` qualify them for the next
+  round's `Battle` — set automatically when a tournament `Battle`'s results
+  are declared. `Battle` itself still gets no bracket/round scalar fields,
+  only a relation-only `roundMatch` back-reference (no column). Not
+  built: season-based auto-qualification (no `Season` entity exists yet —
+  entrants are admin-seeded instead) and a real-time-streaming "TV" surface.
 
 ### Release
 A commercial output — season compilation album (`releases` data loop;

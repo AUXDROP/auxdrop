@@ -29,7 +29,10 @@ export default async function HallOfFamePage() {
     <div className="min-h-screen bg-canvas">
       <div className="mx-auto flex min-h-screen max-w-[1440px] flex-col border-x border-border bg-primary">
         <BrowseHeader
-          navItems={[{ label: "Championship" }, { label: "Hall of Fame", href: "/hall-of-fame" }]}
+          navItems={[
+            { label: "Championship", href: "/championship" },
+            { label: "Hall of Fame", href: "/hall-of-fame" },
+          ]}
           active="Hall of Fame"
         />
 

@@ -4,7 +4,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/admin";
 import { prisma } from "@/lib/prisma";
-import { BattleStatus, NotificationType } from "@/generated/prisma/client";
+import { isRoundResolved } from "@/lib/tournaments";
+import { BattleStatus, RoundStatus, TournamentStatus, NotificationType } from "@/generated/prisma/client";
 
 export async function declareResults(battleId: string, formData: FormData) {
   await requireAdmin();
@@ -37,9 +38,56 @@ export async function declareResults(battleId: string, formData: FormData) {
     data: { status: BattleStatus.COMPLETED },
   });
 
+  // Tournament battles are always exactly 2 entrants — the placement-1
+  // participant advances to the next round. Set directly from placement
+  // here rather than a separate admin step, since finalizing IS the moment
+  // advancement becomes knowable.
+  const roundMatch = await prisma.roundMatch.findUnique({ where: { battleId } });
+  if (roundMatch) {
+    const results = await prisma.battleResult.findMany({ where: { battleId } });
+    for (const r of results) {
+      await prisma.battleResult.update({
+        where: { id: r.id },
+        data: { advanced: r.placement === 1 },
+      });
+    }
+
+    // generateRoundMatches only sets Round.status=COMPLETED at generation
+    // time (for an all-bye round) — a round with a real Battle stays ACTIVE
+    // until that Battle's result lands here, so re-check now. Without this,
+    // "Start next round" would never unblock once a real match resolves.
+    if (await isRoundResolved(roundMatch.roundId)) {
+      await prisma.round.update({
+        where: { id: roundMatch.roundId },
+        data: { status: RoundStatus.COMPLETED },
+      });
+
+      const round = await prisma.round.findUnique({ where: { id: roundMatch.roundId } });
+      if (round) {
+        const totalRounds = await prisma.round.count({
+          where: { tournamentId: round.tournamentId },
+        });
+        if (round.roundNumber === totalRounds) {
+          await prisma.tournament.update({
+            where: { id: round.tournamentId },
+            data: { status: TournamentStatus.COMPLETED },
+          });
+        }
+      }
+    }
+  }
+
   revalidatePath(`/admin/battles/${battleId}`);
   revalidatePath(`/battles/${battleId}/results`);
   revalidatePath("/admin/battles");
+
+  if (roundMatch) {
+    const round = await prisma.round.findUnique({ where: { id: roundMatch.roundId } });
+    if (round) {
+      revalidatePath(`/admin/tournaments/${round.tournamentId}`);
+      redirect(`/admin/tournaments/${round.tournamentId}`);
+    }
+  }
   redirect("/admin/battles");
 }
 
