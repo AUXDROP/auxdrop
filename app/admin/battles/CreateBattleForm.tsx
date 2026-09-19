@@ -2,6 +2,7 @@
 
 import { useActionState, useState } from "react";
 import { Button, Input } from "@/components/ui";
+import { JudgingType } from "@/generated/prisma/enums";
 import { createBattle, type CreateBattleState } from "./actions";
 
 export function CreateBattleForm() {
@@ -41,6 +42,24 @@ export function CreateBattleForm() {
         <label className="flex flex-col gap-1 font-sans text-xs text-faint">
           Submission deadline
           <Input name="submissionDeadline" type="datetime-local" required />
+        </label>
+        <label className="flex flex-col gap-1 font-sans text-xs text-faint">
+          Judging type
+          <select
+            name="judgingType"
+            defaultValue={JudgingType.COMMUNITY}
+            className="rounded-input border border-border bg-elevated px-3 py-2.5 font-sans text-sm text-on-dark"
+          >
+            {Object.values(JudgingType).map((t) => (
+              <option key={t} value={t}>
+                {t.replace("_", " ")}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="flex flex-col gap-1 font-sans text-xs text-faint">
+          Voting deadline (optional)
+          <Input name="judgingDeadline" type="datetime-local" />
         </label>
       </div>
       {state?.error && (

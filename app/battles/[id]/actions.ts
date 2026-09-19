@@ -1,10 +1,17 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 import { uploadTrackAudio } from "@/lib/storage";
-import { Prisma, UserRole, BattleStatus } from "@/generated/prisma/client";
+import {
+  Prisma,
+  UserRole,
+  BattleStatus,
+  JudgingType,
+  JudgeRole,
+} from "@/generated/prisma/client";
 
 export interface SubmitState {
   error?: string;
@@ -101,4 +108,58 @@ export async function fileDispute(
   });
 
   return { success: true };
+}
+
+export interface CastJudgmentResult {
+  error?: string;
+}
+
+export async function castJudgment(
+  submissionId: string,
+  score: number,
+): Promise<CastJudgmentResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  if (!Number.isInteger(score) || score < 1 || score > 5) {
+    return { error: "Invalid score." };
+  }
+
+  const submission = await prisma.submission.findUnique({
+    where: { id: submissionId },
+    include: { battle: true },
+  });
+  if (!submission) return { error: "Submission not found." };
+  if (submission.userId === user.id) {
+    return { error: "You can't vote on your own submission." };
+  }
+  if (submission.battle.status !== BattleStatus.PENDING) {
+    return { error: "Voting isn't open for this battle." };
+  }
+  if (submission.battle.judgingDeadline && submission.battle.judgingDeadline < new Date()) {
+    return { error: "Voting has closed for this battle." };
+  }
+
+  let judgeRole: JudgeRole = JudgeRole.COMMUNITY;
+  if (submission.battle.judgingType !== JudgingType.COMMUNITY) {
+    const assignment = await prisma.battleJudge.findUnique({
+      where: { battleId_userId: { battleId: submission.battleId, userId: user.id } },
+    });
+    if (submission.battle.judgingType === JudgingType.JUDGE_PANEL && !assignment) {
+      return { error: "Only assigned judges can vote on this battle." };
+    }
+    judgeRole = assignment ? JudgeRole.JUDGE : JudgeRole.COMMUNITY;
+  }
+
+  await prisma.judgment.upsert({
+    where: { submissionId_judgedById: { submissionId, judgedById: user.id } },
+    create: { battleId: submission.battleId, submissionId, judgedById: user.id, judgeRole, score },
+    update: { score },
+  });
+
+  revalidatePath(`/battles/${submission.battleId}`);
+  return {};
 }

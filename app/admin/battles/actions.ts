@@ -22,9 +22,18 @@ export async function createBattle(
   const durationMinutes = Number(formData.get("durationMinutes") || 60);
   const startsAt = new Date(String(formData.get("startsAt") || ""));
   const submissionDeadline = new Date(String(formData.get("submissionDeadline") || ""));
+  const judgingDeadlineRaw = String(formData.get("judgingDeadline") || "");
+  const judgingDeadline = judgingDeadlineRaw ? new Date(judgingDeadlineRaw) : null;
+  const judgingTypeRaw = String(formData.get("judgingType") || "COMMUNITY");
+  const judgingType = (Object.values(JudgingType) as string[]).includes(judgingTypeRaw)
+    ? (judgingTypeRaw as JudgingType)
+    : JudgingType.COMMUNITY;
 
   if (!title || isNaN(startsAt.getTime()) || isNaN(submissionDeadline.getTime())) {
     return { error: "Title, start time, and submission deadline are required." };
+  }
+  if (judgingDeadlineRaw && isNaN(judgingDeadline!.getTime())) {
+    return { error: "Voting deadline isn't a valid date." };
   }
 
   await prisma.battle.create({
@@ -35,8 +44,9 @@ export async function createBattle(
       durationMinutes,
       startsAt,
       submissionDeadline,
+      judgingDeadline,
       status: BattleStatus.UPCOMING,
-      judgingType: JudgingType.COMMUNITY,
+      judgingType,
     },
   });
 

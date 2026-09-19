@@ -42,3 +42,36 @@ export async function declareResults(battleId: string, formData: FormData) {
   revalidatePath("/admin/battles");
   redirect("/admin/battles");
 }
+
+export interface AssignJudgeState {
+  error?: string;
+}
+
+export async function assignJudge(
+  battleId: string,
+  _prevState: AssignJudgeState,
+  formData: FormData,
+): Promise<AssignJudgeState> {
+  await requireAdmin();
+
+  const handle = String(formData.get("handle") || "").trim();
+  if (!handle) return { error: "Enter a handle." };
+
+  const user = await prisma.user.findUnique({ where: { handle } });
+  if (!user) return { error: `No user found with handle "${handle}".` };
+
+  await prisma.battleJudge.upsert({
+    where: { battleId_userId: { battleId, userId: user.id } },
+    create: { battleId, userId: user.id },
+    update: {},
+  });
+
+  revalidatePath(`/admin/battles/${battleId}`);
+  return {};
+}
+
+export async function unassignJudge(battleId: string, userId: string) {
+  await requireAdmin();
+  await prisma.battleJudge.deleteMany({ where: { battleId, userId } });
+  revalidatePath(`/admin/battles/${battleId}`);
+}

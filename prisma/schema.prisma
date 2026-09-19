@@ -97,6 +97,9 @@ model Battle {
   startsAt           DateTime
   durationMinutes    Int      @default(60)
   submissionDeadline DateTime
+  // When community/judge voting closes. Optional — a battle without one is
+  // closed out manually by an admin moving it to COMPLETED.
+  judgingDeadline    DateTime?
 
   judgingType JudgingType @default(COMMUNITY)
   createdAt   DateTime    @default(now())

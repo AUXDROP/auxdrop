@@ -51,6 +51,9 @@ A single challenge instance (`battles` data loop; `Beat Battles.dc.html`,
   per-battle, defaults to `COMMUNITY` for Phase 1. Determines how `Judgment`
   rows for this battle get aggregated into a result; judge assignments
   (`BattleJudge`) only apply when this isn't `COMMUNITY`.
+- `judging_deadline` (nullable) — when community/judge voting closes. Added
+  when the voting UI was built (see "Community judging" below); optional,
+  a battle without one is closed out manually by an admin.
 - sponsor_id (nullable, FK → Sponsor) — for sponsored challenges
 - **Not yet modeled, found while building step 4**: a longer challenge
   brief/description text (Battle Detail's "CHALLENGE" paragraph — `title` is
@@ -82,8 +85,8 @@ pure community, a judge panel, or a hybrid of both without a schema change.
 ### BattleJudge
 Assigns a `User` as a judge for a specific Battle. Only relevant when that
 Battle's `judging_type` is `JUDGE_PANEL` or `HYBRID` — empty for `COMMUNITY`
-battles. No judge-assignment UI yet (that's build-order step 4); the table
-exists now so the schema doesn't block it later.
+battles. Judge assignment UI lives at `/admin/battles/:id` (assign/remove by
+handle).
 
 - battle_id (FK), user_id (FK)
 
@@ -216,9 +219,18 @@ The four open questions below have been resolved with the user (2026-09-17).
    `Judgment` entity handles all three, discriminated by `judge_role` and
    aggregated per the battle's `judging_type` (`COMMUNITY | JUDGE_PANEL |
    HYBRID`), configurable per-battle from day one. Default for Phase 1
-   battles is `COMMUNITY`. `BattleJudge` assigns judges when needed. No
-   judge-panel UI yet — schema groundwork only, built at step 2; the UI is
-   step 4.
+   battles is `COMMUNITY`. `BattleJudge` assigns judges when needed.
+   Voting UI (2026-09-19): any authenticated user (except the submission's
+   own creator) can cast a 1–5 `Judgment` on `PENDING` battles at
+   `/battles/:id`; `JUDGE_PANEL` battles restrict voting to users assigned
+   via `BattleJudge`. Results are ranked by weighted average score
+   (`lib/judging.ts`) — `HYBRID` weights judge votes at 70% and community
+   votes at 30% (named constants `JUDGE_WEIGHT`/`COMMUNITY_WEIGHT`, tunable),
+   reflecting that `JUDGE_PANEL`/`HYBRID` exist mainly for sponsored battles
+   where a brand is paying for credentialed judging. The admin results
+   screen at `/admin/battles/:id` pre-fills placement from this computed
+   ranking but still allows a manual override per submission (dispute
+   resolution, ties).
 3. **Are Battles always 1-shot, or also bracket/tournament?** `Battle` is
    always 1-shot. Bracket/tournament structure is a separate `Tournament`
    entity (Phase 3 only) that composes ordinary `Battle` rows via

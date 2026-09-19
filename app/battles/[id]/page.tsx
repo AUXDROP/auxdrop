@@ -10,6 +10,7 @@ import { createClient } from "@/lib/supabase/server";
 import { UserRole, BattleStatus } from "@/generated/prisma/client";
 import { SubmissionForm } from "./SubmissionForm";
 import { DisputeForm } from "./DisputeForm";
+import { VotingSection } from "./VotingSection";
 
 // Evergreen marketing copy, not per-battle data.
 const OUTCOMES = [
@@ -59,6 +60,7 @@ export default async function BattleDetailPage({
     : null;
 
   const isOpen = battle.status === BattleStatus.OPEN && battle.submissionDeadline > new Date();
+  const isJudging = battle.status === BattleStatus.PENDING;
 
   return (
     <div className="min-h-screen bg-canvas">
@@ -119,6 +121,10 @@ export default async function BattleDetailPage({
                   <div className="mt-1.5 font-display text-4xl font-extrabold text-on-dark">
                     <Countdown target={battle.submissionDeadline.toISOString()} />
                   </div>
+                ) : isJudging && battle.judgingDeadline ? (
+                  <div className="mt-1.5 font-display text-4xl font-extrabold text-on-dark">
+                    <Countdown target={battle.judgingDeadline.toISOString()} />
+                  </div>
                 ) : (
                   <div className="mt-1.5 font-display text-2xl font-extrabold text-on-dark">
                     {battle.status === BattleStatus.COMPLETED
@@ -154,6 +160,19 @@ export default async function BattleDetailPage({
               )}
             </Card>
           </div>
+
+          {isJudging && user && (
+            <div className="lg:col-span-2">
+              <div className="mb-3.5 font-sans text-xs font-bold tracking-[0.1em] text-faint">
+                VOTE — RATE EACH ENTRY 1–5
+              </div>
+              <VotingSection
+                battleId={battle.id}
+                judgingType={battle.judgingType}
+                viewerId={user.id}
+              />
+            </div>
+          )}
         </div>
 
         <div className="border-t border-border px-8 py-7 font-sans text-xs text-faint sm:px-16">
