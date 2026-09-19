@@ -129,7 +129,26 @@ battle's `Judgment` rows, aggregated per `judging_type`.
   are declared. `Battle` itself still gets no bracket/round scalar fields,
   only a relation-only `roundMatch` back-reference (no column). Not
   built: season-based auto-qualification (no `Season` entity exists yet —
-  entrants are admin-seeded instead) and a real-time-streaming "TV" surface.
+  entrants are admin-seeded instead).
+
+### TV
+Live-viewing surface for Battles/Championship (`TV.dc.html`). Built
+2026-09-19, but only the honest "coming soon" version — the mockup itself
+has no video embed and no data loop, just a placeholder box and "Nothing
+to watch yet." **Not built, and needs a real decision first**: actual
+video ingest, a video player (the existing `AudioPlayerBar` is audio-only),
+and a streaming vendor (Mux, Livepeer, Cloudflare Stream, or similar) —
+same reasoning as deferring `Wallet` until a payment processor is chosen;
+whatever schema this needs depends heavily on which vendor gets picked, so
+nothing was designed toward one speculatively.
+
+- `TvWaitlistEntry`: the one real thing here — email + optional `userId`
+  (set when the visitor is logged in) + timestamp, for the page's "Get
+  notified" capture. Unique on email; a repeat signup is treated as
+  success, not an error.
+- `/championship`'s "Watch live" button and the marketing header's "TV"
+  nav item both now link to `/tv` (previously inert/absent, since `/tv`
+  didn't exist).
 
 ### Release
 A commercial output — season compilation album (`releases` data loop;

@@ -12,7 +12,7 @@ const HOME_NAV: NavItem[] = [
   { label: "Beatmakers", href: "/beatmakers" },
   { label: "Shop" },
   { label: "Releases", href: "/releases" },
-  { label: "TV" },
+  { label: "TV", href: "/tv" },
 ];
 
 const SUBPAGE_NAV: NavItem[] = [

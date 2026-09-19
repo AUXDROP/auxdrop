@@ -45,6 +45,7 @@ export default async function ChampionshipPage() {
             { label: "Hall of Fame", href: "/hall-of-fame" },
           ]}
           active="Championship"
+          cta={{ label: "Watch live", href: "/tv" }}
         />
 
         {!tournament ? (

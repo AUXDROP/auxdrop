@@ -65,6 +65,8 @@ model User {
   roundMatchesAsUserA     RoundMatch[]        @relation("RoundMatchUserA")
   roundMatchesAsUserB     RoundMatch[]        @relation("RoundMatchUserB")
   roundMatchesAsByeWinner RoundMatch[]        @relation("RoundMatchByeWinner")
+
+  tvWaitlistEntries TvWaitlistEntry[]
 }
 
 model BeatmakerProfile {
@@ -580,4 +582,19 @@ model IndustryProfile {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+// --- TV (non-commerce catch-up work) ---------------------------------------
+//
+// No real streaming infra exists — no video ingest, no player, no vendor
+// chosen (Mux/Livepeer/etc. would each need a different schema, same
+// reasoning as deferring Wallet until a payment processor is picked). This
+// is just the "Get notified" waitlist capture from the /tv teaser page,
+// nothing more.
+model TvWaitlistEntry {
+  id        String   @id @default(uuid()) @db.Uuid
+  email     String   @unique
+  userId    String?  @db.Uuid
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
 }
